@@ -1,0 +1,18 @@
+.dropzone .dz-preview .dz-error-message {
+   top: 150px!important;
+ }
+.dropzone {
+   min-height: 215px;
+ }
+ .dropzone-verifie{
+   min-height: 115px;
+ }
+ .dz-remove{
+   padding-top: 10px;
+ }
+ .dropzone .dz-preview {
+   display: flex !important;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+ }
