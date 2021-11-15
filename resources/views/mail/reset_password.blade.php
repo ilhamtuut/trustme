@@ -12,8 +12,7 @@
   <table align="center" cellpadding="0" cellspacing="0" width="600" style="border: 1px solid #eee;">
     <tr style="background-color: #222;">
         <td align="center" style="padding: 20px 0 30px 0; border-bottom: 5px solid #eee;">
-          <img src="{{asset('images/trust-logo.png')}}" alt="logo" style="display: block; width: 60px;"/>
-          <h2 style="color: #fff;">{{ config('app.name') }}</h2>
+          <img src="{{asset('images/trust-logo.png')}}" alt="logo" style="display: block; height: 60px;"/>
         </td>
     </tr>
     <tr>
