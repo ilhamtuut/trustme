@@ -73,14 +73,14 @@ Withdraw
             </div>
 
             <div class="form-group">
-              <label class="control-label">Amount ($)</label>
-              <input id="amount" name="amount" class="form-control" placeholder="Amount ($)" min="1" type="number">
+              <label class="control-label">Amount (Trustme Coin)</label>
+              <input id="amount" name="amount" class="form-control" placeholder="Amount (Trustme Coin)" min="1" type="number">
               <p id="error-amount" class="text-danger"></p>
             </div>
 
             <div class="form-group">
-              <label class="control-label">Total (Trustme Coin)</label>
-              <input id="total" name="total" class="form-control" placeholder="Total (Trustme Coin)" type="text" readonly>
+              <label class="control-label">Total (USD)</label>
+              <input id="total" name="total" class="form-control" placeholder="Total (USD)" type="text" readonly>
               <p id="error-total" class="text-danger"></p>
             </div>
 
@@ -127,9 +127,9 @@ Withdraw
       $('#error-amount').html('');
       if(value >= min){
         var total = value * price;
-        var amountfee = total * fee;
-        var receive = total - amountfee;
-        $('#total').val(addCommas(parseFloat(total).toFixed(8)));
+        var amountfee = value * fee;
+        var receive = value - amountfee;
+        $('#total').val(addCommas(parseFloat(total).toFixed(2)));
         $('#fee').val(addCommas(parseFloat(amountfee).toFixed(8)));
         $('#receive').val(addCommas(parseFloat(receive).toFixed(8)));
       }else{

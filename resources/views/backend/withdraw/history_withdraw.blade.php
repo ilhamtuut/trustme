@@ -57,11 +57,11 @@ History Withdraw
                       <th>Inv</th>
                       <th>Date</th>
                       <th class="text-center">Status</th>
-                      <th class="text-right">Amount ($)</th>
-                      <th class="text-right">Rate</th>
-                      <th class="text-right">Total (TC)</th>
-                      <th class="text-right">Fee (TC)</th>
-                      <th class="text-right">Receive (TC)</th>
+                      <th class="text-right">Amount (TMC)</th>
+                      <th class="text-right">Rate (USD)</th>
+                      <th class="text-right">Total (USD)</th>
+                      <th class="text-right">Fee (TMC)</th>
+                      <th class="text-right">Receive (TMC)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,9 +83,9 @@ History Withdraw
                                 <span class="label label-md label-light-danger label-inline">Canceled</span>
                             @endif
                             </td>
-                            <td class="text-right">{{number_format($h->amount,2)}}</td>
+                            <td class="text-right">{{number_format($h->amount,8)}}</td>
                             <td class="text-right">{{number_format($h->price,2)}}</td>
-                            <td class="text-right">{{number_format($h->total,8)}}</td>
+                            <td class="text-right">{{number_format($h->total,2)}}</td>
                             <td class="text-right">{{number_format($h->fee,8)}}</td>
                             <td class="text-right">{{number_format($h->receive,8)}}</td>
                         </tr>
@@ -109,7 +109,7 @@ History Withdraw
                     <td colspan="4">Total</td>
                     <td class="text-right">{{number_format($amount,2)}}</td>
                     <td></td>
-                    <td class="text-right">{{number_format($total,8)}}</td>
+                    <td class="text-right">{{number_format($total,2)}}</td>
                     <td class="text-right">{{number_format($fee,8)}}</td>
                     <td class="text-right">{{number_format($receive,8)}}</td>
                   </tr>

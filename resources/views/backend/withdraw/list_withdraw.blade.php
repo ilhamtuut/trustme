@@ -69,7 +69,7 @@ List Withdraw {{strtoupper($type)}}
                       <th>Username</th>
                       <th>Date</th>
                       <th class="text-center">Status</th>
-                      <th class="text-right">Amount ($)</th>
+                      <th class="text-right">Amount</th>
                       <th class="text-right">Rate</th>
                       <th class="text-right">Total</th>
                       <th class="text-right">Fee</th>
@@ -94,9 +94,9 @@ List Withdraw {{strtoupper($type)}}
                               <span class="label label-md label-light-danger label-inline">Canceled</span>
                             @endif
                           </td>
-                          <td class="text-right">{{number_format($h->amount,2)}}</td>
+                          <td class="text-right">{{number_format($h->amount,8)}}</td>
                           <td class="text-right">{{number_format($h->price,2)}}</td>
-                          <td class="text-right">{{number_format($h->total,8)}}</td>
+                          <td class="text-right">{{number_format($h->total,2)}}</td>
                           <td class="text-right">{{number_format($h->fee,8)}}</td>
                           <td class="text-right">{{number_format($h->receive,8)}}</td>
                           <td class="text-center">
@@ -118,7 +118,7 @@ List Withdraw {{strtoupper($type)}}
                     <td colspan="5">Total</td>
                     <td class="text-right">{{number_format($amount,2)}}</td>
                     <td></td>
-                    <td class="text-right">{{number_format($total,8)}}</td>
+                    <td class="text-right">{{number_format($total,2)}}</td>
                     <td class="text-right">{{number_format($fee,8)}}</td>
                     <td class="text-right">{{number_format($receive,8)}}</td>
                     <td></td>

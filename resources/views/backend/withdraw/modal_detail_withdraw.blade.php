@@ -18,11 +18,11 @@
 		              	<div class="panel-body">
 				      		<p>Name : {{ucfirst($wd->user->name)}}</p>
 				      		<p>Username : {{ucfirst($wd->user->username)}}</p>
-				      		<p>Amount ($) : {{number_format($wd->amount,2)}}</p>
-				      		<p>Exchange Rate : {{number_format($wd->price,2)}}</p>
-				      		<p>Total : {{number_format($wd->total,8)}}</p>
-				      		<p>Fee : {{number_format($wd->fee,8)}}</p>
-				      		<p>Receive : {{number_format($wd->receive,8)}}</p>
+				      		<p>Amount : {{number_format($wd->amount,8)}} TMC</p>
+				      		<p>Exchange Rate : {{number_format($wd->price,2)}} USD</p>
+				      		<p>Total : {{number_format($wd->total,2)}} USD</p>
+				      		<p>Fee : {{number_format($wd->fee,8)}} TMC</p>
+				      		<p>Receive : {{number_format($wd->receive,8)}} TMC</p>
 				      		<p>Status :
 				      			@if($wd->status == 1)
 			                    	<span class="label label-md label-light-success label-inline">Success</span>

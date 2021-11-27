@@ -67,7 +67,7 @@ class WithdrawController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $my = number_format($user->balance()->where('description','USD Wallet')->first()->balance,2);
+        $my = number_format($user->balance()->where('description','Trustme Coin')->first()->balance,2);
         $fee = Setting::where('name','Fee Withdrawal')->first()->value;
         $min = Setting::where('name','Minimal Withdrawal')->first()->value;
         $price = Price::where('status',0)->first()->price;
@@ -88,9 +88,9 @@ class WithdrawController extends Controller
 
         $hasPassword = Hash::check($request->security_password, Auth::user()->trx_password);
         if($hasPassword){
-            $type_wallet = 'USD Wallet';
+            $type_wallet = 'Trustme Coin';
             $fee_wd = Setting::where('name','Fee Withdrawal')->first()->value;
-            $description = 'Withdrawal '.$type_wallet.' to Trustme Coin';
+            $description = 'Withdrawal Trustme Coin';
             $price = Price::where('status',0)->first()->price;
             $coin = Auth::user()->wallet()->where('status',1)->first();
             if(is_null($coin)){
@@ -109,8 +109,8 @@ class WithdrawController extends Controller
             );
             $amount = $request->amount;
             $total = $amount * $price;
-            $fee = $total * $fee_wd;
-            $receive = $total - $fee;
+            $fee = $amount * $fee_wd;
+            $receive = $amount - $fee;
             $cash = Auth::user()->balance()->where('description',$type_wallet)->first();
             if($amount <= $cash->balance){
                 $checkWd = Withdraw::where([
@@ -343,7 +343,7 @@ class WithdrawController extends Controller
         $withdraw->save();
 
         $amount = $withdraw->amount;
-        $name_wallet = 'USD Wallet';
+        $name_wallet = 'Trustme Coin';
 
         $balance = Balance::where(['user_id'=>1,'description'=>$name_wallet])->first();
         $balance->balance = $balance->balance - $amount;
