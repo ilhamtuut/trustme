@@ -25,6 +25,7 @@ List Withdraw {{strtoupper($type)}}
 @endsection
 
 @section('content')
+@include('layouts.partials.alert')
 <div class="card card-custom">
     <div class="card-body">
         <div class="mb-7">
@@ -95,9 +96,9 @@ List Withdraw {{strtoupper($type)}}
                           </td>
                           <td class="text-right">{{number_format($h->amount,2)}}</td>
                           <td class="text-right">{{number_format($h->price,2)}}</td>
-                          <td class="text-right">{{number_format($h->total,2)}}</td>
-                          <td class="text-right">{{number_format($h->fee,2)}}</td>
-                          <td class="text-right">{{number_format($h->receive,2)}}</td>
+                          <td class="text-right">{{number_format($h->total,8)}}</td>
+                          <td class="text-right">{{number_format($h->fee,8)}}</td>
+                          <td class="text-right">{{number_format($h->receive,8)}}</td>
                           <td class="text-center">
                             <span class="label label-md label-light-primary label-inline cursor-pointer" data-target=".detail-modal-{{$h->id}}" data-toggle="modal">Detail</span>
                             <div class="text-left">
@@ -117,9 +118,9 @@ List Withdraw {{strtoupper($type)}}
                     <td colspan="5">Total</td>
                     <td class="text-right">{{number_format($amount,2)}}</td>
                     <td></td>
-                    <td class="text-right">{{number_format($total,2)}}</td>
-                    <td class="text-right">{{number_format($fee,2)}}</td>
-                    <td class="text-right">{{number_format($receive,2)}}</td>
+                    <td class="text-right">{{number_format($total,8)}}</td>
+                    <td class="text-right">{{number_format($fee,8)}}</td>
+                    <td class="text-right">{{number_format($receive,8)}}</td>
                     <td></td>
                   </tr>
                 </tfoot>

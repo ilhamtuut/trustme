@@ -1,7 +1,7 @@
 @extends('layouts.backend',['active'=>'list_wallet','page'=>'account'])
 
 @section('page-title')
-<i class="fas fa-file-invoice-dollar text-success"></i>
+<i class="fas fa-file-invoice-dollar text-white"></i>
 List Trustme Coin Address
 @endsection
 
@@ -20,7 +20,7 @@ List Trustme Coin Address
         <div class="mb-7">
             <div class="row align-items-center">
                 <div class="col-lg-12 col-xl-12">
-                    <form action="{{ route('dinasty_coin.list') }}" method="get">
+                    <form action="{{ route('trustme_coin.list') }}" method="get">
                       <div class="row align-items-center">
                           <div class="col-lg-8 my-2 my-md-0">
                           </div>

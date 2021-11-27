@@ -1,8 +1,8 @@
-@extends('layouts.backend',['active'=>'convert','page'=>'convert'])
+@extends('layouts.backend',['active'=>'deposit','page'=>'deposit'])
 
 @section('page-title')
-<i class="flaticon2-hourglass text-white"></i>
-Convert
+<i class="far fa-credit-card text-white"></i>
+Deposit
 @endsection
 
 @section('breadcrumb')
@@ -13,7 +13,7 @@ Convert
       <a href="" class="text-white text-hover-dark">Wallets</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="" class="text-white text-hover-dark">Convert</a>
+      <a href="" class="text-white text-hover-dark">Deposit</a>
   </li>
 @endsection
 
@@ -22,36 +22,35 @@ Convert
 <div class="card card-custom">
   <div class="card-header align-items-center bg-warning">
     <h3 class="card-title align-items-start flex-column">
-      <span class="text-white">Convert USD Wallet to Trustme Coin</span>
-      <span class="text-white mt-3 font-weight-bold font-size-sm">USD Wallet : <i class="text-white fas fa-dollar-sign icon-sm"></i> {{$my}}</span>
+      <span class="text-white">Deposit Trustme Coin</span>
     </h3>
     <div class="card-toolbar">
       <div class="dropdown dropdown-inline">
-        <a href="{{route('convert.history')}}" class="btn btn-light-warning btn-sm font-weight-bolder"><i class="flaticon-clock-2"></i> History</a>
+        <a href="{{route('deposit.history')}}" class="btn btn-light-warning btn-sm font-weight-bolder"><i class="flaticon-clock-2"></i> History</a>
         </a>
       </div>
     </div>
   </div>
   <!--begin::Form-->
-  <form class="form" action="{{route('convert.send')}}" method="POST">
+  <form class="form" action="{{route('deposit.send')}}" method="POST">
     <div class="card-body">
-      <div class="alert alert-custom alert-light-success fade show mb-5" role="alert">
-          <div class="alert-text">Note : 1 TC = ${{$price}} </div>
+      <div class="text-center mb-5" role="alert">
+            <h4>Receiver Address TC</h4>
+            <img width="150px" src="{{asset('images/receive.png')}}"> <br>
+            Please send the balance to the address <span>{{$address}} <i class="fa fa-copy text-success cursor-pointer" onclick="copyToClipboard('{{$address}}')"></i></span> first, then fill in the transfer amount and txid/hash below and wait for confirmation from us.
       </div>
       @csrf
+
       <div class="form-group">
-        <label class="control-label">Amount ($)</label>
+        <label class="control-label">TXID/Hash</label>
+        <input id="txid" name="txid" class="form-control" placeholder="TXID/Hash" type="text">
+      </div>
+      
+      <div class="form-group">
+        <label class="control-label">Amount (TC)</label>
         <input id="amount" name="amount" class="form-control" placeholder="Amount" min="1" type="number">
         <p id="error-amount" class="text-danger"></p>
       </div>
-
-      <div class="form-group">
-        <label class="control-label">Trustme Coin (TC)</label>
-        <input id="receive" name="receive" class="form-control" placeholder="Trustme Coin (TC)" type="text" readonly>
-        @if($fee > 0)
-            <p class="text-danger mb-0">Fee {{$fee*100}}%</p>
-        @endif
-    </div>
 
       <div class="form-group">
         <label class="control-label">Security Password</label>
@@ -75,22 +74,9 @@ Convert
 
 @section('script')
 <script type="text/javascript">
-    var kurs = {{$price}}, fee = {{$fee}};
-    $('#amount').on('keyup change', function () {
-      var value = $(this).val();
-      if(value){
-        var amountfee = value * fee;
-        var receive = value - amountfee;
-        var total = receive/kurs;
-        $('#receive').val(addCommas(parseFloat(total).toFixed(8)));
-      }else{
-        $('#receive').val('');
-      }
-    });
-
     function clear() {
       $('#amount').val('');
-      $('#receive').val('');
+      $('#txid').val('');
       $('#password').val('');
     }
 

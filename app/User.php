@@ -211,4 +211,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class, 'user_id')->where('type','!=','Need Eth');
     }
+
+    public function deposit()
+    {
+        return $this->hasMany(Deposit::class, 'user_id');
+    }
 }

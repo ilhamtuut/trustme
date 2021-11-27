@@ -114,15 +114,24 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
       Route::get('/list', ['as' => 'list', 'uses' => 'ConvertController@list'])->middleware(['permission:administrator']);
     });
 
+    // deposit
+    Route::group(['prefix' => 'deposit', 'as' => 'deposit.'], function() {
+      Route::get('/', ['as' => 'index', 'uses' => 'DepositController@index']);
+      Route::post('/send', ['as' => 'send', 'uses' => 'DepositController@send']);
+      Route::get('/history', ['as' => 'history', 'uses' => 'DepositController@history']);
+      Route::get('/list', ['as' => 'list', 'uses' => 'DepositController@list'])->middleware(['permission:administrator']);
+      Route::get('/confirm/{type}/{id}', ['as' => 'confirm', 'uses' => 'DepositController@confirm'])->middleware(['permission:administrator']);
+    });
+
     // withdraw
-    // Route::group(['prefix' => 'withdraw', 'as' => 'withdraw.'], function() {
-    //   Route::get('/', ['as' => 'index', 'uses' => 'WithdrawController@index']);
-    //   Route::post('/send/{type}', ['as' => 'send', 'uses' => 'WithdrawController@withdraw']);
-    //   Route::get('/history', ['as' => 'history', 'uses' => 'WithdrawController@history_withdraw']);
-    //   Route::get('/list/{type}', ['as' => 'list_withdraw', 'uses' => 'WithdrawController@list_withdraw'])->middleware(['permission:administrator']);
-    //   Route::post('/accept/{id}', ['as' => 'accept', 'uses' => 'WithdrawController@accept'])->middleware(['permission:administrator']);
-    //   Route::get('/reject/{id}', ['as' => 'reject', 'uses' => 'WithdrawController@reject'])->middleware(['permission:administrator']);
-    // });
+    Route::group(['prefix' => 'withdraw', 'as' => 'withdraw.'], function() {
+      Route::get('/', ['as' => 'index', 'uses' => 'WithdrawController@index']);
+      Route::post('/send/{type}', ['as' => 'send', 'uses' => 'WithdrawController@withdraw']);
+      Route::get('/history', ['as' => 'history', 'uses' => 'WithdrawController@history_withdraw']);
+      Route::get('/list/{type}', ['as' => 'list_withdraw', 'uses' => 'WithdrawController@list_withdraw'])->middleware(['permission:administrator']);
+      Route::post('/accept/{id}', ['as' => 'accept', 'uses' => 'WithdrawController@accept'])->middleware(['permission:administrator']);
+      Route::get('/reject/{id}', ['as' => 'reject', 'uses' => 'WithdrawController@reject'])->middleware(['permission:administrator']);
+    });
 
     // setting
     Route::group(['prefix' => 'setting', 'as' => 'setting.'], function() {
@@ -164,8 +173,8 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
       Route::get('/changeActive/{id}', ['as' => 'changeActive', 'uses' => 'BankController@changeActive']);
     });
 
-    // USDT Address
-    Route::group(['prefix' => 'dinasty_coin', 'as' => 'dinasty_coin.'], function() {
+    // Trustme Address
+    Route::group(['prefix' => 'trustme_coin', 'as' => 'trustme_coin.'], function() {
       Route::get('/', ['as' => 'index', 'uses' => 'WalletController@index'])->middleware(['permission:administrator']);
       Route::get('/list', ['as' => 'list', 'uses' => 'WalletController@list'])->middleware(['permission:administrator']);
       Route::get('/myWallet', ['as' => 'myWallet', 'uses' => 'WalletController@myWallet']);

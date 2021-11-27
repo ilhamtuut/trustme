@@ -6,6 +6,8 @@ use DB;
 use Mail;
 use Response;
 use App\User;
+use App\Price;
+use App\Wallet;
 use App\Setting;
 use App\Balance;
 use App\Program;
@@ -64,55 +66,51 @@ class WithdrawController extends Controller
 
     public function index(Request $request)
     {
-        $my = number_format(Auth::user()->balance->where('description','Trustme Coin')->first()->balance,2);
+        $user = Auth::user();
+        $my = number_format($user->balance()->where('description','USD Wallet')->first()->balance,2);
         $fee = Setting::where('name','Fee Withdrawal')->first()->value;
         $min = Setting::where('name','Minimal Withdrawal')->first()->value;
-        $idr = Setting::where('name','USD/IDR')->first()->value;
-        $usdt = Setting::where('name','USD/IDR')->first()->value;
-        return view('backend.withdraw.index',compact('fee','min','idr','usdt','my'));
+        $price = Price::where('status',0)->first()->price;
+        $address = '';
+        if($user->wallet()->where('status',1)->first()){
+            $address = $user->wallet()->where('status',1)->first()->address;
+        }
+        return view('backend.withdraw.index',compact('fee','min','my','address','price'));
     }
 
     public function withdraw(Request $request,$type)
     {
         $this->validate($request, [
+            'address' =>'required|string|max:50',
             'amount'=>'required|numeric|greater_than',
             'security_password'=>'required'
         ]);
 
-        $type_wallet = 'Trustme Coin';
-        $fee_wd = Setting::where('name','Fee Withdrawal')->first()->value;
-        if($type == 'bank'){
-            $description = 'Withdrawal '.$type_wallet.' to Bank';
-            $price = Setting::where('name','USD/IDR')->first()->value;
-            $bank = Auth::user()->mybank()->where('status',1)->first();
-            if(is_null($bank)){
-                $request->session()->flash('failed', 'Failed, Please Add your Bank Account to withdrawal');
-                return redirect()->route('bank.account');
-            }
-            $data_json = array(
-                'bank_name' => $bank->bank->name,
-                'account_name' => $bank->username,
-                'account_number' => $bank->account
-            );
-        }else{
-            $description = 'Withdrawal '.$type_wallet.' to USDT';
-            $price = Setting::where('name','USD/IDR')->first()->value;
-            $usdt = Auth::user()->wallet()->where('status',1)->first();
-            if(is_null($usdt)){
-                $request->session()->flash('failed', 'Failed, Please Add your USDT Address to withdrawal');
-                return redirect()->route('usdt.myWallet');
-            }
-            $data_json = array(
-                'name' => $usdt->name,
-                'address' => $usdt->address
-            );
-        }
-        $amount = $request->amount;
-        $total = $amount * $price;
-        $fee = $total * $fee_wd;
-        $receive = $total - $fee;
         $hasPassword = Hash::check($request->security_password, Auth::user()->trx_password);
         if($hasPassword){
+            $type_wallet = 'USD Wallet';
+            $fee_wd = Setting::where('name','Fee Withdrawal')->first()->value;
+            $description = 'Withdrawal '.$type_wallet.' to Trustme Coin';
+            $price = Price::where('status',0)->first()->price;
+            $coin = Auth::user()->wallet()->where('status',1)->first();
+            if(is_null($coin)){
+                $coin = Wallet::create([
+                    'user_id' => Auth::id(),
+                    'name' => 'Trustme Coin',
+                    'currency' => 'TC',
+                    'address' => $request->address,
+                    'key' => $request->address,
+                    'status' => 1
+                ]);
+            }
+            $data_json = array(
+                'name' => $coin->name,
+                'address' => $coin->address
+            );
+            $amount = $request->amount;
+            $total = $amount * $price;
+            $fee = $total * $fee_wd;
+            $receive = $total - $fee;
             $cash = Auth::user()->balance()->where('description',$type_wallet)->first();
             if($amount <= $cash->balance){
                 $checkWd = Withdraw::where([
@@ -199,16 +197,11 @@ class WithdrawController extends Controller
         if($request->date){
             $date = date('Y-m-d',strtotime(str_replace('/', '-', $request->date)));
         }
-        $type = $request->type;
-        if(is_null($type)){
-            $type = 'bank';
-        }
         $data = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
-                ->where('type',$type)
                 ->orderBy('created_at','desc')
                 ->paginate(20);
         $amount = Auth::user()
@@ -216,28 +209,24 @@ class WithdrawController extends Controller
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
-                ->where('type',$type)
                 ->sum('amount');
         $total = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
-                ->where('type',$type)
                 ->sum('total');
         $fee = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
-                ->where('type',$type)
                 ->sum('fee');
         $receive = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
-                ->where('type',$type)
                 ->sum('receive');
         return view('backend.withdraw.history_withdraw',compact('data','date','amount','total','fee','receive'))->with('i', (request()->input('page', 1) - 1) * 20);
     }
@@ -269,7 +258,6 @@ class WithdrawController extends Controller
         }
 
         $data = Withdraw::whereIn('status',$status)
-            ->where('type',$type)
             ->when($search, function ($query) use ($search,$type){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
@@ -281,7 +269,6 @@ class WithdrawController extends Controller
             ->paginate(20);
 
         $amount = Withdraw::whereIn('status',$status)
-            ->where('type',$type)
             ->when($search, function ($query) use ($search,$type){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
@@ -291,7 +278,6 @@ class WithdrawController extends Controller
             ->whereDate('created_at','<=',$to)
             ->sum('amount');
         $total = Withdraw::whereIn('status',$status)
-            ->where('type',$type)
             ->when($search, function ($query) use ($search,$type){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
@@ -301,7 +287,6 @@ class WithdrawController extends Controller
             ->whereDate('created_at','<=',$to)
             ->sum('total');
         $fee = Withdraw::whereIn('status',$status)
-            ->where('type',$type)
             ->when($search, function ($query) use ($search,$type){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
@@ -311,7 +296,6 @@ class WithdrawController extends Controller
             ->whereDate('created_at','<=',$to)
             ->sum('fee');
         $receive = Withdraw::whereIn('status',$status)
-            ->where('type',$type)
             ->when($search, function ($query) use ($search,$type){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
@@ -359,7 +343,7 @@ class WithdrawController extends Controller
         $withdraw->save();
 
         $amount = $withdraw->amount;
-        $name_wallet = 'Trustme Coin';
+        $name_wallet = 'USD Wallet';
 
         $balance = Balance::where(['user_id'=>1,'description'=>$name_wallet])->first();
         $balance->balance = $balance->balance - $amount;

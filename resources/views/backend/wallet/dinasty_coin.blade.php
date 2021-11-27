@@ -39,6 +39,8 @@ Trustme Coin
     <p class="pt-5">
       <a href="{{route('transfer.wallet','trustme_coin')}}" class="btn btn-light-warning mr-3">
       <i class="far fa-share-square"></i>Transfer</a>
+      <a href="{{route('deposit.index')}}" class="btn btn-light-success mr-3">
+      <i class="far fa-credit-card"></i>Deposit</a>
     </p>
     @else
     <p class="pt-3 text-white">

@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       	<div class="modal-header bg-success">
-	        <h3 class="modal-title text-white"><i class="fa fa-info-circle"></i> Information</h3>
+	        <h3 class="modal-title text-white"><i class="fa fa-info-circle text-white"></i> Information</h3>
 	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 	    </div>
 	    <div class="modal-body">
@@ -20,10 +20,10 @@
 				      		<p>Username : {{ucfirst($wd->user->username)}}</p>
 				      		<p>Amount ($) : {{number_format($wd->amount,2)}}</p>
 				      		<p>Exchange Rate : {{number_format($wd->price,2)}}</p>
-				      		<p>Total : {{number_format($wd->total,2)}}</p>
-				      		<p>Fee : {{number_format($wd->fee,2)}}</p>
-				      		<p>Receive : {{number_format($wd->receive,2)}}</p>
-				      		<p>Status : 
+				      		<p>Total : {{number_format($wd->total,8)}}</p>
+				      		<p>Fee : {{number_format($wd->fee,8)}}</p>
+				      		<p>Receive : {{number_format($wd->receive,8)}}</p>
+				      		<p>Status :
 				      			@if($wd->status == 1)
 			                    	<span class="label label-md label-light-success label-inline">Success</span>
 				                @elseif($wd->status == 2)
@@ -41,7 +41,7 @@
 	      			<div class="panel panel-primary">
 	      				<div class="panel-heading">
 		                    <div class="pull-left">
-		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : 'Usdt Address' }}</h6>
+		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : 'Trustme Coin Address' }}</h6>
 		                    </div>
 		                    <div class="clearfix"></div>
 		                </div>
@@ -57,7 +57,7 @@
 					      			<p>Ref : {{$json->txid}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
 				      			@endif
 				      		@else
-				      			<p>Usdt Address : </p>
+				      			<p>Trustme Coin Address : </p>
 				      			<p>{{$json->address}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->address}}')">Copy <i class="la la-copy icon-sm text-primary" ></i></span></p>
 				      			@if(isset($json->txid))
 					      			<p>Txid : </p>
