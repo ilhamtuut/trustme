@@ -44,19 +44,11 @@ Settings
                           <td>{{++$key}}</td>
                           <td>{{$h->name}}</td>
                           <td class="text-right">
-                            @if ($h->id == 7)
-                                @if($h->value == 1)
-                                    Show
-                                @else
-                                    Hide
-                                @endif
-                            @else
                                 @if($h->currency == '%')
                                     {{$h->value * 100}}{{$h->currency}}
                                 @else
                                     {{number_format($h->value,2)}} {{$h->currency}}
                                 @endif
-                            @endif
                             </td>
                           <td class="text-center">
                               <button class="btn btn-sm btn-light-success call_modal" data-id="{{$h->id}}" data-value="{{($h->currency == '%')? $h->value*100 : $h->value}}" data-desc="{{$h->name}}" data-toggle="modal" data-target="#responsive-modal" type="button">Update</button>
@@ -86,12 +78,6 @@ Settings
             $('#value').val($(this).data('value'));
             $('#title-modal').html('Update ' + title.replace(/_/g,' '));
             $('#value').removeClass('hidden')
-            $('#select-value').addClass('hidden')
-            if($(this).data('id') == 7){
-                $('#value').addClass('hidden')
-                $('#select-value').removeClass('hidden')
-                $("#select-value").val($(this).data('value')).trigger("change");
-            }
         });
     });
 </script>

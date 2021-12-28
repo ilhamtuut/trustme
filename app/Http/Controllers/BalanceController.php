@@ -37,6 +37,7 @@ class BalanceController extends Controller
     			->whereHas('user', function ($query) use($search) {
                     $query->where('users.username','LIKE', $search.'%');
                 })
+                ->orderBy('user_id','asc')
                 ->paginate(20);
         $total = Balance::where('user_id','!=',1)
                 ->when($wallet, function ($query) use ($wallet){
@@ -322,5 +323,96 @@ class BalanceController extends Controller
             $saldo = 0;
         }
         return view('backend.wallet.register_wallet', compact('data','total','from_date','to_date','id','saldo','balance'))->with('i', (request()->input('page', 1) - 1) * 20);
+    }
+
+    public function balance_spartan(Request $request)
+    {
+        $from_date = str_replace('/', '-', $request->from_date);
+        $to_date = str_replace('/', '-', $request->to_date);
+        if($from_date && $to_date){
+            $from = date('Y-m-d',strtotime($from_date));
+            $to = date('Y-m-d',strtotime($to_date));
+        }else{
+            // $from_date = '01/01/2018';
+            $from = date('Y-m-d',strtotime('01/01/2018'));
+            $to = date('Y-m-d');
+            $from_date = date('01/01/Y');
+            $to_date = date('d/m/Y');
+        }
+
+        $balance = Auth::user()->balance->where('description','Spartan Coin')->first();
+        if($balance){
+            $data = HistoryTransaction::where('balance_id',$balance->id)
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->orderBy('created_at','desc')
+                ->paginate(20);
+            $in = HistoryTransaction::where('balance_id',$balance->id)
+                ->where('type','IN')
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->sum('amount');
+            $out = HistoryTransaction::where('balance_id',$balance->id)
+                ->where('type','OUT')
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->sum('amount');
+            $a = number_format($in,8, '.', '');
+            $b = number_format($out,8, '.', '');
+            $total = $a - $b;
+            $saldo = $balance->balance;
+        }else{
+            $data = HistoryTransaction::whereYear('created_at','2017')
+                ->orderBy('created_at','desc')
+                ->paginate(20);
+            $total = 0;
+            $saldo = 0;
+        }
+        $id = null;
+        return view('backend.wallet.spartan_coin', compact('data','total','from_date','to_date','id','saldo'))->with('i', (request()->input('page', 1) - 1) * 20);
+    }
+
+    public function balance_spartan_member(Request $request,$id)
+    {
+        $from_date = str_replace('/', '-', $request->from_date);
+        $to_date = str_replace('/', '-', $request->to_date);
+        if($from_date && $to_date){
+            $from = date('Y-m-d',strtotime($from_date));
+            $to = date('Y-m-d',strtotime($to_date));
+        }else{
+            // $from_date = '01/01/2018';
+            $from = date('Y-m-d',strtotime('01/01/2018'));
+            $to = date('Y-m-d');
+            $from_date = date('01/01/Y');
+            $to_date = date('d/m/Y');
+        }
+
+        $balance = Balance::where(['user_id'=>$id,'description'=>'Spartan Coin'])->first();
+        if($balance){
+            $data = HistoryTransaction::where('balance_id',$balance->id)
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->orderBy('created_at','desc')
+                ->paginate(20);
+            $in = HistoryTransaction::where('balance_id',$balance->id)->where('type','IN')
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->sum('amount');
+            $out = HistoryTransaction::where('balance_id',$balance->id)->where('type','OUT')
+                ->whereDate('created_at','>=',$from)
+                ->whereDate('created_at','<=',$to)
+                ->sum('amount');
+            $a = number_format($in,8, '.', '');
+            $b = number_format($out,8, '.', '');
+            $total = $a - $b;
+            $saldo = $balance->balance;
+        }else{
+            $data = HistoryTransaction::whereYear('created_at','2017')
+                ->orderBy('created_at','desc')
+                ->paginate(20);
+            $total = 0;
+            $saldo = 0;
+        }
+        return view('backend.wallet.spartan_coin', compact('data','total','from_date','to_date','id','saldo','balance'))->with('i', (request()->input('page', 1) - 1) * 20);
     }
 }

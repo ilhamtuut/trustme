@@ -16,14 +16,16 @@
 		                    <div class="clearfix"></div>
 		                </div>
 		              	<div class="panel-body">
-				      		<p>Name : {{ucfirst($wd->user->name)}}</p>
-				      		<p>Username : {{ucfirst($wd->user->username)}}</p>
-				      		<p>Amount : {{number_format($wd->amount,8)}} TMC</p>
-				      		<p>Exchange Rate : {{number_format($wd->price,2)}} USD</p>
-				      		<p>Total : {{number_format($wd->total,2)}} USD</p>
-				      		<p>Fee : {{number_format($wd->fee,8)}} TMC</p>
-				      		<p>Receive : {{number_format($wd->receive,8)}} TMC</p>
-				      		<p>Status :
+				      		<p class="mb-1">Name : {{ucfirst($wd->user->name)}}</p>
+				      		<p class="mb-1">Username : {{ucfirst($wd->user->username)}}</p>
+				      		<p class="mb-1">Amount : {{number_format($wd->amount,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
+                            @if($type == 'trustme')
+                                <p class="mb-1">Exchange Rate : {{number_format($wd->price,2)}} USD</p>
+                                <p class="mb-1">Total : {{number_format($wd->total,2)}} USD</p>
+                            @endif
+				      		<p class="mb-1">Fee : {{number_format($wd->fee,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
+				      		<p class="mb-1">Receive : {{number_format($wd->receive,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
+				      		<p class="mb-1">Status :
 				      			@if($wd->status == 1)
 			                    	<span class="label label-md label-light-success label-inline">Success</span>
 				                @elseif($wd->status == 2)
@@ -32,8 +34,8 @@
 				                    <span class="label label-md label-light-warning label-inline">Pending</span>
 				                @endif
 			                </p>
-				      		<p>Description : {{$wd->description}}</p>
-				      		<p>Date : {{$wd->created_at}}</p>
+				      		<p class="mb-1">Description : {{$wd->description}}</p>
+				      		<p class="mb-1">Date : {{$wd->created_at}}</p>
 		              	</div>
 		            </div>
 	      		</div>
@@ -41,7 +43,7 @@
 	      			<div class="panel panel-primary">
 	      				<div class="panel-heading">
 		                    <div class="pull-left">
-		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : 'Trustme Coin Address' }}</h6>
+		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : ucfirst($type).' Coin Address' }}</h6>
 		                    </div>
 		                    <div class="clearfix"></div>
 		                </div>
@@ -50,18 +52,18 @@
 		              			$json = json_decode($wd->json);
 		              		@endphp
 		              		@if($wd->type == 'bank')
-					      		<p>Bank Name : {{$json->bank_name}}</p>
-					      		<p>Bank Username : {{$json->account_name}}</p>
-					      		<p>Bank Account : {{$json->account_number}} <span class="label label-md label-light-primary label-inline cursor-pointer"  onclick="copyToClipboard('{{$json->account_number}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
+					      		<p class="mb-1">Bank Name : {{$json->bank_name}}</p>
+					      		<p class="mb-1">Bank Username : {{$json->account_name}}</p>
+					      		<p class="mb-1">Bank Account : {{$json->account_number}} <span class="label label-md label-light-primary label-inline cursor-pointer"  onclick="copyToClipboard('{{$json->account_number}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
 				      			@if(isset($json->txid))
-					      			<p>Ref : {{$json->txid}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
+					      			<p class="mb-1">Ref : {{$json->txid}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
 				      			@endif
 				      		@else
-				      			<p>Trustme Coin Address : </p>
-				      			<p>{{$json->address}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->address}}')">Copy <i class="la la-copy icon-sm text-primary" ></i></span></p>
+				      			<p class="mb-1">{{ucfirst($type)}} Coin Address : </p>
+				      			<p class="mb-1">{{$json->address}} <br> <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->address}}')">Copy <i class="la la-copy icon-sm text-primary" ></i></span></p>
 				      			@if(isset($json->txid))
-					      			<p>Txid : </p>
-					      			<p>{{$json->txid}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
+					      			<p class="mb-1">Txid : </p>
+					      			<p class="mb-1">{{$json->txid}} <br> <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
 					      		@endif
 				      		@endif
 		              	</div>

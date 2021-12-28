@@ -115,6 +115,13 @@ class RegisterController extends Controller
             'description' => 'Register Wallet'
         ]);
 
+        Balance::create([
+            'user_id' => $user->id,
+            'balance' => 0,
+            'status' => 1,
+            'description' => 'Spartan Coin'
+        ]);
+
         $memberRole = Role::where('name', 'member')->first();
         $user->attachRole($memberRole);
         $this->saveDownline($user->id, $upline_id);

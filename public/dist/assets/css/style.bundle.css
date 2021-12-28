@@ -44518,7 +44518,8 @@ code {
   border-bottom: 0; }
 
 .table.table-vertical-center th, .table.table-vertical-center td {
-  vertical-align: middle; }
+  vertical-align: middle;
+  white-space: nowrap; }
 
 .table:not(.table-bordered) thead th, .table:not(.table-bordered) thead td {
   border-top: 0; }

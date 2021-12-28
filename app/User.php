@@ -216,4 +216,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Deposit::class, 'user_id');
     }
+
+    public function holder()
+    {
+        return $this->hasMany(HoldTmc::class, 'user_id');
+    }
 }

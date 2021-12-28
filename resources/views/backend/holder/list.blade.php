@@ -1,4 +1,4 @@
-@extends('layouts.backend',['active'=>$type,'page'=>'withdraw'])
+@extends('layouts.backend',['active'=>'list','page'=>'bounty'])
 
 @section('page-title')
 <span class="svg-icon svg-icon-white svg-icon-sm">
@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-List Withdraw {{strtoupper($type)}}
+List Bounty Spartan Coin
 @endsection
 
 @section('breadcrumb')
@@ -20,7 +20,7 @@ List Withdraw {{strtoupper($type)}}
       <a href="" class="text-white text-hover-dark">Dashboard</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="#" class="text-white text-hover-dark">List Withdraw {{strtoupper($type)}}</a>
+      <a href="#" class="text-white text-hover-dark">List Bounty Spartan Coin</a>
   </li>
 @endsection
 
@@ -31,7 +31,7 @@ List Withdraw {{strtoupper($type)}}
         <div class="mb-7">
             <div class="row align-items-center">
                 <div class="col-lg-12 col-xl-12">
-                  <form action="{{ route('withdraw.list_withdraw',$type) }}" method="get" id="form-search">
+                  <form action="{{ route('bounty.list') }}" method="get" id="form-search">
                     <div class="row align-items-center">
                         <div class="col-lg-3 my-2 my-md-0">
                           <input name="from_date" type="text" class="form-control singledate" placeholder="Search From Date">
@@ -42,9 +42,8 @@ List Withdraw {{strtoupper($type)}}
                         <div class="col-lg-3 my-2 my-md-0">
                           <select name="choose" class="form-control select2" style="width: 100%;">
                             <option value="">Choose Status</option>
-                            <option @if($choose == 1) selected @endif value="1">Pending</option>
-                            <option @if($choose == 2) selected @endif value="2">Success</option>
-                            <option @if($choose == 3) selected @endif value="3">Canceled</option>
+                            <option @if($choose == 1) selected @endif value="1">On Process</option>
+                            <option @if($choose == 2) selected @endif value="2">Completed</option>
                           </select>
                         </div>
                         <div class="col-lg-3 my-2 my-md-0">
@@ -65,16 +64,14 @@ List Withdraw {{strtoupper($type)}}
                 <thead>
                     <tr class="text-left text-uppercase">
                       <th width="3%">#</th>
+                      <th>Date</th>
                       <th>Inv</th>
                       <th>Username</th>
-                      <th>Date</th>
+                      <th>Expired Date</th>
                       <th class="text-center">Status</th>
-                      <th class="text-right">Amount</th>
+                      <th class="text-right">Amount (TMC)</th>
                       <th class="text-right">Rate</th>
-                      <th class="text-right">Total</th>
-                      <th class="text-right">Fee</th>
-                      <th class="text-right">Receive</th>
-                      <th class="text-center">Action</th>
+                      <th class="text-right">Total (SPARTAN)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,46 +79,34 @@ List Withdraw {{strtoupper($type)}}
                       @foreach ($data as $h)
                         <tr>
                           <td>{{++$i}}</td>
+                          <td>{{date('d F Y H:i:s', strtotime($h->created_at))}}</td>
                           <td>{{$h->invoice}}</td>
                           <td>{{ucfirst($h->user->username)}}</td>
-                          <td>{{date('d F Y H:i:s', strtotime($h->created_at))}}</td>
+                          <td>{{date('d F Y', strtotime($h->expired_at))}}</td>
                           <td class="text-center">
                             @if($h->status == 0)
-                              <span class="label label-md label-light-warning label-inline">Pending</span>
+                              <span class="label label-md label-light-warning label-inline">On Process</span>
                             @elseif($h->status == 1)
-                              <span class="label label-md label-light-success label-inline">Success</span>
-                            @elseif($h->status == 2)
-                              <span class="label label-md label-light-danger label-inline">Canceled</span>
+                              <span class="label label-md label-light-success label-inline">Completed</span>
                             @endif
                           </td>
                           <td class="text-right">{{number_format($h->amount,8)}}</td>
-                          <td class="text-right">{{number_format($h->price,2)}}</td>
-                          <td class="text-right">{{number_format($h->total,2)}}</td>
-                          <td class="text-right">{{number_format($h->fee,8)}}</td>
-                          <td class="text-right">{{number_format($h->receive,8)}}</td>
-                          <td class="text-center">
-                            <span class="label label-md label-light-primary label-inline cursor-pointer" data-target=".detail-modal-{{$h->id}}" data-toggle="modal">Detail</span>
-                            <div class="text-left">
-                              @include('backend.withdraw.modal_detail_withdraw', ['wd' => $h])
-                            </div>
-                          </td>
+                          <td class="text-right">{{number_format($h->rate,8)}}</td>
+                          <td class="text-right">{{number_format($h->total,8)}}</td>
                         </tr>
                       @endforeach
                   @else
                     <tr>
-                      <td colspan="11" class="text-center">No data available in table</td>
+                      <td colspan="9" class="text-center">No data available in table</td>
                     </tr>
                   @endif
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colspan="5">Total</td>
+                    <td colspan="6">Total</td>
                     <td class="text-right">{{number_format($amount,8)}}</td>
                     <td></td>
-                    <td class="text-right">{{number_format($total,2)}}</td>
-                    <td class="text-right">{{number_format($fee,8)}}</td>
-                    <td class="text-right">{{number_format($receive,8)}}</td>
-                    <td></td>
+                    <td class="text-right">{{number_format($total,8)}}</td>
                   </tr>
                 </tfoot>
             </table>
@@ -130,42 +115,4 @@ List Withdraw {{strtoupper($type)}}
         <!--end: Datatable-->
     </div>
 </div>
-@include('backend.withdraw.modal_accept')
-@endsection
-@section('script')
-<script type="text/javascript">
-  function accept(id,username) {
-    $('#modal-accept').modal('show');
-    $('#form-accept').attr('action', '{{ url('/withdraw/accept') }}/'+id);
-  }
-
-  function reject(id,username) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "Reject withdrawal with username "+username,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Submit",
-      customClass: {
-        confirmButton: "btn font-weight-bold btn-light-primary",
-        cancelButton: "btn font-weight-bold btn-light-danger"
-      }
-    }).then(function(result) {
-      if (result.value) {
-        $.ajax({
-            url:'{{ url('/withdraw/reject') }}/'+id,
-            type:'GET',
-            success:function(data) {
-              location.reload();
-            },
-        });
-      }
-    });
-  }
-
-  $('#btn_submit').on('click',function(){
-    $('#action').addClass('hidden');
-    $('#spinner').removeClass('hidden');
-  });
-</script>
 @endsection

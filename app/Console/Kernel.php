@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        '\App\Console\Commands\ExpiredHold',
         '\App\Console\Commands\GenerateBonusPasif',
     ];
 
@@ -26,6 +27,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('generate:bonus_pasif')
                 ->dailyAt('00:10')
+                ->withoutOverlapping();
+        $schedule->command('expired:hold')
+                ->dailyAt('00:30')
                 ->withoutOverlapping();
     }
 

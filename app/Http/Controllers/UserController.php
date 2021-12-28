@@ -114,6 +114,13 @@ class UserController extends Controller
                 'description' => 'Register Wallet'
             ]);
 
+            Balance::create([
+                'user_id' => $user->id,
+                'balance' => 0,
+                'status' => 1,
+                'description' => 'Spartan Coin'
+            ]);
+
             $this->saveDownline($user->id, $upline->id);
 
             $request->session()->flash('success', 'Successfully, create data user');

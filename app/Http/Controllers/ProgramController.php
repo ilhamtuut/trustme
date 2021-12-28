@@ -315,6 +315,13 @@ class ProgramController extends Controller
                     'description' => 'Register Wallet'
                 ]);
 
+                Balance::create([
+                    'user_id' => $user->id,
+                    'balance' => 0,
+                    'status' => 1,
+                    'description' => 'Spartan Coin'
+                ]);
+
                 $this->saveDownline($new_user->id, Auth::id());
                 $user_id = $new_user->id;
                 $program = Program::create([

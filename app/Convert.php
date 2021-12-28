@@ -14,6 +14,9 @@ class Convert extends Model
         'total',
         'price',
         'receive',
+        'trustme',
+        'spartan',
+        'receive',
         'status',
     	'description'
     ];

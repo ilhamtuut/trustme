@@ -35,6 +35,7 @@ Balance
                               <option value="">Choose</option>
                               <option @if($wallet == 'USD Wallet') selected @endif value="USD Wallet">USD Wallet</option>
                               <option @if($wallet == 'Trustme Coin') selected @endif value="Trustme Coin">Trustme Coin</option>
+                              <option @if($wallet == 'Spartan Coin') selected @endif value="Spartan Coin">Spartan Coin</option>
                               <option @if($wallet == 'Register Wallet') selected @endif value="Register Wallet">Register Wallet</option>
                             </select>
                           </div>
@@ -68,11 +69,13 @@ Balance
                               <td>{{++$i}}</td>
                               <td>
                                 @if($h->description == 'Trustme Coin')
-                                  <a class="text-hover-warning text-warning" href="{{ route('balance.harvest_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
+                                    <a class="text-hover-warning text-warning" href="{{ route('balance.harvest_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
+                                @elseif($h->description == 'Spartan Coin')
+                                    <a class="text-hover-warning text-warning" href="{{ route('balance.spartan_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
                                 @elseif($h->description == 'USD Wallet')
-                                  <a class="text-hover-warning text-warning" href="{{ route('balance.my_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
+                                    <a class="text-hover-warning text-warning" href="{{ route('balance.my_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
                                 @elseif($h->description == 'Register Wallet')
-                                  <a class="text-hover-warning text-warning" href="{{ route('balance.register_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
+                                    <a class="text-hover-warning text-warning" href="{{ route('balance.register_member',$h->user_id) }}">{{ucfirst($h->user->username)}}</a>
                                 @endif
                               </td>
                               <td>{{$h->description}}</td>

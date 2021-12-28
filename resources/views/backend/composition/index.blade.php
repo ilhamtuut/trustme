@@ -50,12 +50,20 @@ Composition
                           <td class="text-right">
                             @if(preg_match('/Bonus/',$h->name))
                                 USD Wallet {{$h->one*100}}%
+                            @elseif($h->name == 'Convert Hold TMC')
+                                Trustme Coin {{$h->one*100}}%
                             @else
                                 Register Wallet {{$h->one*100}}%
                             @endif
                           </td>
                           <td class="text-right">
-                            @if($h->two > 0) Trustme Coin @endif {{$h->two*100}}%
+                            @if($h->two > 0)
+                                @if($h->name == 'Convert Hold TMC')
+                                    Spartan Coin
+                                @else
+                                    Trustme Coin
+                                @endif
+                            @endif {{$h->two*100}}%
                           </td>
                           <td class="text-center">
                             <button class="btn btn-sm btn-light-success call_modal" data-id="{{$h->id}}" data-name="{{$h->name}}" data-one="{{$h->one*100}}" data-two="{{$h->two*100}}" data-three="{{$h->three*100}}" data-toggle="modal" data-target="#responsive-modal" type="button">Update</button>

@@ -1,4 +1,4 @@
-@extends('layouts.backend',['active'=>'history_withdraw','page'=> request()->type == 'spartan'? 'bounty' : 'withdraw'])
+@extends('layouts.backend',['active'=>'history','page'=>'bounty'])
 
 @section('page-title')
 <span class="svg-icon svg-icon-white svg-icon-sm">
@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-History Withdraw
+History Bounty Spartan Coin
 @endsection
 
 @section('breadcrumb')
@@ -20,7 +20,7 @@ History Withdraw
       <a href="" class="text-white text-hover-dark">Dashboard</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="" class="text-white text-hover-dark">Withdraw</a>
+      <a href="" class="text-white text-hover-dark">Bounty Spartan Coin</a>
   </li>
   <li class="breadcrumb-item">
       <a href="#" class="text-white text-hover-dark">History</a>
@@ -33,16 +33,9 @@ History Withdraw
         <div class="mb-7">
             <div class="row align-items-center">
                 <div class="col-lg-12 col-xl-12">
-                  <form action="{{ route('withdraw.history') }}" method="get" id="form-search">
+                  <form action="{{ route('bounty.history') }}" method="get" id="form-search">
                     <div class="row align-items-center">
-                        <div class="col-md-4 my-2 my-md-0"></div>
-                        <div class="col-md-4 my-2 my-md-0">
-                            <select name="type" class="form-control select2" style="width: 100%;">
-                                <option value="">Choose Type</option>
-                                <option @if(request()->type == 'trustme') selected @endif value="trustme">Trustme Coin</option>
-                                <option @if(request()->type == 'spartan') selected @endif value="spartan">Spartan Coin</option>
-                            </select>
-                        </div>
+                        <div class="col-md-8 my-2 my-md-0"></div>
                         <div class="col-md-4 my-2 my-md-0">
                               <div class="input-group">
                                   <input name="date" type="text" class="form-control singledate" placeholder="Search date">
@@ -61,55 +54,36 @@ History Withdraw
                 <thead>
                     <tr class="text-left text-uppercase">
                       <th width="3%">#</th>
-                      <th>Inv</th>
                       <th>Date</th>
-                      <th class="text-center">Currency</th>
+                      <th>Inv</th>
+                      <th>Expired Date</th>
                       <th class="text-center">Status</th>
-                      <th class="text-right">Amount</th>
-                      <th class="text-right">Rate ($)</th>
-                      <th class="text-right">Total ($)</th>
-                      <th class="text-right">Fee</th>
-                      <th class="text-right">Receive</th>
+                      <th class="text-right">Amount (TMC)</th>
+                      <th class="text-right">Total (SPARTAN)</th>
                     </tr>
                 </thead>
                 <tbody>
                   @if($data->count()>0)
                     @foreach ($data as $h)
-                        @php
-                          $json = json_decode($h->json);
-                        @endphp
                         <tr>
                             <td>{{++$i}}</td>
+                            <td>{{date('d F Y H:i:s', strtotime($h->created_at))}}</td>
                             <td>{{$h->invoice}}</td>
-                            <td>{{$h->created_at}}</td>
-                            <td class="text-center">{{ucfirst($h->type)}} Coin</td>
+                            <td>{{date('d F Y', strtotime($h->expired_at))}}</td>
                             <td class="text-center">
-                            @if($h->status == 0)
-                                <span class="label label-md label-light-warning label-inline">Pending</span>
-                            @elseif($h->status == 1)
-                                <span class="label label-md label-light-success label-inline">Success</span>
-                            @elseif($h->status == 2)
-                                <span class="label label-md label-light-danger label-inline">Canceled</span>
-                            @endif
+                                @if($h->status == 0)
+                                    <span class="label label-md label-light-warning label-inline">On Process</span>
+                                @elseif($h->status == 1)
+                                    <span class="label label-md label-light-success label-inline">Completed</span>
+                                @endif
                             </td>
                             <td class="text-right">{{number_format($h->amount,8)}}</td>
-                            <td class="text-right">{{number_format($h->price,2)}}</td>
-                            <td class="text-right">{{number_format($h->total,2)}}</td>
-                            <td class="text-right">{{number_format($h->fee,8)}}</td>
-                            <td class="text-right">{{number_format($h->receive,8)}}</td>
+                            <td class="text-right">{{number_format($h->total,8)}}</td>
                         </tr>
-                        @if(isset($json->txid))
-                        <tr>
-                            <td></td>
-                            <td colspan="8">
-                                <p>Txid : {{$json->txid}} <span class="label label-md label-light-primary label-inline cursor-pointer" onclick="copyToClipboard('{{$json->txid}}')">Copy <i class="la la-copy icon-sm text-primary"></i></span></p>
-                            </td>
-                        </tr>
-                        @endif
                     @endforeach
                   @else
                     <tr>
-                      <td colspan="10" class="text-center">No data available in table</td>
+                      <td colspan="7" class="text-center">No data available in table</td>
                     </tr>
                   @endif
                 </tbody>
@@ -117,10 +91,7 @@ History Withdraw
                   <tr>
                     <td colspan="5">Total</td>
                     <td class="text-right">{{number_format($amount,8)}}</td>
-                    <td></td>
-                    <td class="text-right">{{number_format($total,2)}}</td>
-                    <td class="text-right">{{number_format($fee,8)}}</td>
-                    <td class="text-right">{{number_format($receive,8)}}</td>
+                    <td class="text-right">{{number_format($total,8)}}</td>
                   </tr>
                 </tfoot>
             </table>

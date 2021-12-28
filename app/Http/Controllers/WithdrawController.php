@@ -36,6 +36,7 @@ class WithdrawController extends Controller
         $this->middleware('auth');
         $this->middleware('user-online');
         $min = Setting::where('name', 'Minimal Withdrawal')->first()->value;
+        $min_spartan = Setting::where('name', 'Minimal Withdrawal Spartan')->first()->value;
 
         $factory->extend(
             'greater_than',
@@ -45,6 +46,16 @@ class WithdrawController extends Controller
                 }
             },
             'The amount must be greater than '.$min
+        );
+
+        $factory->extend(
+            'min_spartan',
+            function ($attribute, $value, $parameters, $validator) use ($min_spartan) {
+                if($value >= $min_spartan){
+                    return true;
+                }
+            },
+            'The amount must be greater than '.$min_spartan
         );
 
         $factory->extend(
@@ -67,7 +78,7 @@ class WithdrawController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $my = number_format($user->balance()->where('description','Trustme Coin')->first()->balance,2);
+        $my = number_format($user->balance()->where('description','Trustme Coin')->first()->balance,8);
         $fee = Setting::where('name','Fee Withdrawal')->first()->value;
         $min = Setting::where('name','Minimal Withdrawal')->first()->value;
         $price = Price::where('status',0)->first()->price;
@@ -78,29 +89,54 @@ class WithdrawController extends Controller
         return view('backend.withdraw.index',compact('fee','min','my','address','price'));
     }
 
+    public function spartan(Request $request)
+    {
+        $user = Auth::user();
+        $my = number_format($user->balance()->where('description','Spartan Coin')->first()->balance,8);
+        $fee = Setting::where('name','Fee Withdrawal Spartan')->first()->value;
+        $min = Setting::where('name','Minimal Withdrawal Spartan')->first()->value;
+        $address = '';
+        if($user->wallet()->where('status',2)->first()){
+            $address = $user->wallet()->where('status',2)->first()->address;
+        }
+        return view('backend.withdraw.spartan',compact('fee','min','my','address'));
+    }
+
     public function withdraw(Request $request,$type)
     {
+        $status = 1;
+        $currency = 'TC';
+        $name_wd = 'Fee Withdrawal';
+        $price = Price::where('status',0)->first()->price;
+        $required_amount = 'required|numeric|greater_than';
+        if($type == 'spartan'){
+            $price = 0;
+            $status = 2;
+            $currency = 'SPARTAN';
+            $name_wd = 'Fee Withdrawal Spartan';
+            $required_amount = 'required|numeric|min_spartan';
+        }
+
         $this->validate($request, [
             'address' =>'required|string|max:50',
-            'amount'=>'required|numeric|greater_than',
+            'amount'=>$required_amount,
             'security_password'=>'required'
         ]);
 
         $hasPassword = Hash::check($request->security_password, Auth::user()->trx_password);
         if($hasPassword){
-            $type_wallet = 'Trustme Coin';
-            $fee_wd = Setting::where('name','Fee Withdrawal')->first()->value;
-            $description = 'Withdrawal Trustme Coin';
-            $price = Price::where('status',0)->first()->price;
-            $coin = Auth::user()->wallet()->where('status',1)->first();
+            $type_wallet = ucfirst($type).' Coin';
+            $fee_wd = Setting::where('name',$name_wd)->first()->value;
+            $description = 'Withdrawal '.ucfirst($type).' Coin';
+            $coin = Auth::user()->wallet()->where('status',$status)->first();
             if(is_null($coin)){
                 $coin = Wallet::create([
                     'user_id' => Auth::id(),
-                    'name' => 'Trustme Coin',
-                    'currency' => 'TC',
+                    'name' => ucfirst($type).' Coin',
+                    'currency' => $currency,
                     'address' => $request->address,
                     'key' => $request->address,
-                    'status' => 1
+                    'status' => $status
                 ]);
             }
             $data_json = array(
@@ -194,6 +230,7 @@ class WithdrawController extends Controller
     public function history_withdraw(Request $request)
     {
     	$date = '';
+        $type = $request->type;
         if($request->date){
             $date = date('Y-m-d',strtotime(str_replace('/', '-', $request->date)));
         }
@@ -202,6 +239,9 @@ class WithdrawController extends Controller
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
+                ->when($type,function ($cari) use ($type) {
+                    return $cari->where('type', $type);
+                })
                 ->orderBy('created_at','desc')
                 ->paginate(20);
         $amount = Auth::user()
@@ -209,11 +249,17 @@ class WithdrawController extends Controller
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
+                ->when($type,function ($cari) use ($type) {
+                    return $cari->where('type', $type);
+                })
                 ->sum('amount');
         $total = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
+                })
+                ->when($type,function ($cari) use ($type) {
+                    return $cari->where('type', $type);
                 })
                 ->sum('total');
         $fee = Auth::user()
@@ -221,11 +267,17 @@ class WithdrawController extends Controller
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
                 })
+                ->when($type,function ($cari) use ($type) {
+                    return $cari->where('type', $type);
+                })
                 ->sum('fee');
         $receive = Auth::user()
                 ->withdraw()
                 ->when($date,function ($cari) use ($date) {
                     return $cari->whereDate('created_at', $date);
+                })
+                ->when($type,function ($cari) use ($type) {
+                    return $cari->where('type', $type);
                 })
                 ->sum('receive');
         return view('backend.withdraw.history_withdraw',compact('data','date','amount','total','fee','receive'))->with('i', (request()->input('page', 1) - 1) * 20);
@@ -258,49 +310,54 @@ class WithdrawController extends Controller
         }
 
         $data = Withdraw::whereIn('status',$status)
-            ->when($search, function ($query) use ($search,$type){
+            ->when($search, function ($query) use ($search){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
-                })->orwhere('invoice',$search)->where('type',$type);
+                })->orwhere('invoice',$search);
             })
+            ->where('type',$type)
             ->whereDate('created_at','>=',$from)
             ->whereDate('created_at','<=',$to)
             ->orderBy('created_at','desc')
             ->paginate(20);
 
         $amount = Withdraw::whereIn('status',$status)
-            ->when($search, function ($query) use ($search,$type){
+            ->when($search, function ($query) use ($search){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
-                })->orWhere('invoice',$search)->where('type',$type);
+                })->orWhere('invoice',$search);
             })
+            ->where('type',$type)
             ->whereDate('created_at','>=',$from)
             ->whereDate('created_at','<=',$to)
             ->sum('amount');
         $total = Withdraw::whereIn('status',$status)
-            ->when($search, function ($query) use ($search,$type){
+            ->when($search, function ($query) use ($search){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
-                })->orWhere('invoice',$search)->where('type',$type);
+                })->orWhere('invoice',$search);
             })
+            ->where('type',$type)
             ->whereDate('created_at','>=',$from)
             ->whereDate('created_at','<=',$to)
             ->sum('total');
         $fee = Withdraw::whereIn('status',$status)
-            ->when($search, function ($query) use ($search,$type){
+            ->when($search, function ($query) use ($search){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
-                })->orWhere('invoice',$search)->where('type',$type);
+                })->orWhere('invoice',$search);
             })
+            ->where('type',$type)
             ->whereDate('created_at','>=',$from)
             ->whereDate('created_at','<=',$to)
             ->sum('fee');
         $receive = Withdraw::whereIn('status',$status)
-            ->when($search, function ($query) use ($search,$type){
+            ->when($search, function ($query) use ($search){
                 $query->whereHas('user', function ($cari) use ($search){
                     $cari->where('users.username', 'like', $search.'%');
-                })->orWhere('invoice',$search)->where('type',$type);
+                })->orWhere('invoice',$search);
             })
+            ->where('type',$type)
             ->whereDate('created_at','>=',$from)
             ->whereDate('created_at','<=',$to)
             ->sum('receive');

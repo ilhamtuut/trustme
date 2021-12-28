@@ -1,4 +1,4 @@
-@extends('layouts.backend',['active'=>'wd','page'=>'withdraw'])
+@extends('layouts.backend',['active'=>'spartan','page'=>'withdraw'])
 
 @section('page-title')
 <span class="svg-icon svg-icon-white svg-icon-sm">
@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-Withdraw Trustme Coin
+Withdraw Spartan Coin
 @endsection
 
 @section('breadcrumb')
@@ -33,18 +33,18 @@ Withdraw Trustme Coin
   <div class="card-header align-items-center bg-warning">
     <h3 class="card-title align-items-start flex-column">
       <span class="text-white">Withdraw</span>
-      <span class="text-white mt-3 font-weight-bold font-size-sm">Trustme Coin : {{$my}}</span>
+      <span class="text-white mt-3 font-weight-bold font-size-sm">Spartan Coin : {{$my}}</span>
     </h3>
     <div class="card-toolbar">
       <div class="dropdown dropdown-inline">
-        <a href="{{route('withdraw.history')}}?type=trustme" class="btn btn-light-warning btn-sm font-weight-bolder"><i class="flaticon-clock-2"></i> History</a>
+        <a href="{{route('withdraw.history')}}?type=spartan" class="btn btn-light-warning btn-sm font-weight-bolder"><i class="flaticon-clock-2"></i> History</a>
         </a>
       </div>
     </div>
   </div>
   <!--begin::Form-->
     <div class="card-body">
-        <form class="form" action="{{route('withdraw.send','trustme')}}" method="POST">
+        <form class="form" action="{{route('withdraw.send','spartan')}}" method="POST">
             @csrf
             <div class="form-group mb-8">
               <div class="alert alert-custom alert-default" role="alert">
@@ -67,21 +67,15 @@ Withdraw Trustme Coin
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label">Trustme Coin address</label>
-              <input id="address" name="address" value="{{$address}}" @if($address) readonly @endif class="form-control" placeholder="Trustme Coin address" type="text">
+              <label class="control-label">Spartan Coin address</label>
+              <input id="address" name="address" value="{{$address}}" @if($address) readonly @endif class="form-control" placeholder="Spartan Coin address" type="text">
               <p id="error-address" class="text-danger"></p>
             </div>
 
             <div class="form-group">
-              <label class="control-label">Amount (Trustme Coin)</label>
-              <input id="amount" name="amount" class="form-control" placeholder="Amount (Trustme Coin)" min="1" type="number">
+              <label class="control-label">Amount (Spartan Coin)</label>
+              <input id="amount" name="amount" class="form-control" placeholder="Amount (Spartan Coin)" min="1" type="number">
               <p id="error-amount" class="text-danger"></p>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label">Total (USD)</label>
-              <input id="total" name="total" class="form-control" placeholder="Total (USD)" type="text" readonly>
-              <p id="error-total" class="text-danger"></p>
             </div>
 
             @if($fee > 0)
@@ -92,8 +86,8 @@ Withdraw Trustme Coin
             @endif
 
             <div class="form-group">
-              <label class="control-label">Receive (Trustme Coin)</label>
-              <input id="receive" class="form-control" placeholder="Receive (Trustme Coin)" type="text" readonly>
+              <label class="control-label">Receive (Spartan Coin)</label>
+              <input id="receive" class="form-control" placeholder="Receive (Spartan Coin)" type="text" readonly>
             </div>
 
             <div class="form-group">
@@ -119,21 +113,18 @@ Withdraw Trustme Coin
 @section('script')
 <script type="text/javascript">
     var fee = {{$fee}},
-        min = {{$min}},
-        price = {{$price}};
+        min = {{$min}};
 
     $('#amount').on('keyup change', function () {
       var value = parseInt($(this).val());
       $('#error-amount').html('');
       if(value >= min){
-        var total = value * price;
         var amountfee = value * fee;
         var receive = value - amountfee;
-        $('#total').val(addCommas(parseFloat(total).toFixed(2)));
         $('#fee').val(addCommas(parseFloat(amountfee).toFixed(8)));
         $('#receive').val(addCommas(parseFloat(receive).toFixed(8)));
       }else{
-        $('#error-amount').html('Minimal Withdrawal : {{$min}} TC');
+        $('#error-amount').html('Minimal Withdrawal : {{$min}} SPARTAN');
         $('#receive').val('');
       }
     });
@@ -148,7 +139,6 @@ Withdraw Trustme Coin
 
     function clear() {
       $('#amount').val('');
-      $('#total').val('');
       $('#fee').val('');
       $('#receive').val('');
       $('#password').val('');

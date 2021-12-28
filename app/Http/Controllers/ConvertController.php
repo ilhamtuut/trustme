@@ -12,7 +12,9 @@ use App\Setting;
 use App\Balance;
 use App\Program;
 use App\Convert;
+use App\HoldTmc;
 use App\LogActivity;
+use App\Composition;
 use App\Transaction;
 use App\ConvertDetail;
 use Illuminate\Support\Str;
@@ -73,9 +75,17 @@ class ConvertController extends Controller
         $amount = $request->amount;
         $price = Price::where('status',0)->first()->price;
         $fee = Setting::where('name','Fee Convert')->first()->value;
+        $rate = Setting::where('name','1 TMC')->first()->value;
+        $composition = Composition::where('name','Convert Hold TMC')->first();
+        $one = $composition->one;
+        $two = $composition->two;
         $amountFee = $amount * $fee;
         $total = $amount - $amountFee;
         $receive =  str_replace(',', '', number_format($total / $price,8));
+        $amount_one = $receive * $one;
+        $amount_two = $receive * $two;
+        $trustme = $amount_one;
+        $spartan = $amount_two * $rate;
         $hasPassword = Hash::check($request->security_password, Auth::user()->trx_password);
         if($hasPassword){
             $type_wallet = 'USD Wallet';
@@ -140,6 +150,8 @@ class ConvertController extends Controller
                         'total' => $total,
                         'price'=> $price,
                         'receive' => $receive,
+                        'trustme' => $trustme,
+                        'spartan' => $spartan,
                         'status' => 1,
                         'description' => $description
                     ]);
@@ -184,33 +196,33 @@ class ConvertController extends Controller
 
                     // Admin
                     $toWalletAdm = Balance::where(['user_id'=> 1,'description'=> $to_wallet])->first();
-                    $toWalletAdm->balance = $toWalletAdm->balance - $receive;
+                    $toWalletAdm->balance = $toWalletAdm->balance - $trustme;
                     $toWalletAdm->save();
 
                     HistoryTransaction::create([
                         'balance_id' => $toWalletAdm->id,
                         'from_id' => 1,
                         'to_id' => Auth::user()->id,
-                        'amount' => $receive,
+                        'amount' => $trustme,
                         'description' => $description.' to '.ucfirst(Auth::user()->username),
                         'status' => 1,
                         'type' => 'OUT'
                     ]);
 
                     $toWallet = Auth::user()->balance()->where('description',$to_wallet)->first();
-                    $toWallet->balance = $toWallet->balance + $receive;
+                    $toWallet->balance = $toWallet->balance + $trustme;
                     $toWallet->save();
 
                     HistoryTransaction::create([
                         'balance_id' => $toWallet->id,
                         'from_id' => 1,
                         'to_id' => Auth::user()->id,
-                        'amount' => $receive,
+                        'amount' => $trustme,
                         'description' => $description,
                         'status' => 1,
                         'type' => 'IN'
                     ]);
-
+                    $this->autoHold(Auth::user()->id,$amount_two,$rate);
                     $request->session()->flash('success', 'Successfully, '.$description);
                 }
             }else{
@@ -337,5 +349,55 @@ class ConvertController extends Controller
     public function generateCode()
     {
         return substr(str_shuffle(str_repeat('0123456789',10)),0,3);
+    }
+
+    public function autoHold($user_id,$amount,$rate)
+    {
+        $user = User::find($user_id);
+        $timer = Setting::where('name','Hold Timer')->first()->value;
+        $description = 'Holder Bounty Spartan Coin';
+
+        $total = $amount * $rate;
+        $date = date('Y-m-d');
+        $expired_at = date('Y-m-d', strtotime($date. ' + '.$timer.' days'));
+
+        HoldTmc::create([
+            'user_id' => $user->id,
+            'amount' => $amount,
+            'rate'=> $rate,
+            'total'=> $total,
+            'expired_at' => $expired_at,
+            'status' => 0,
+            'description' => $description
+        ]);
+
+        // Admin
+        $spartan_adm = Balance::where(['user_id'=> 1,'description'=> 'Spartan coin'])->first();
+        $spartan_adm->balance = $spartan_adm->balance - $total;
+        $spartan_adm->save();
+
+        HistoryTransaction::create([
+            'balance_id' => $spartan_adm->id,
+            'from_id' => 1,
+            'to_id' => $user->id,
+            'amount' => $total,
+            'description' => $description.' To '.ucfirst($user->username),
+            'status' => 1,
+            'type' => 'OUT'
+        ]);
+
+        $spartan = $user->balance()->where('description','Spartan coin')->first();
+        $spartan->balance = $spartan->balance + $total;
+        $spartan->save();
+
+        HistoryTransaction::create([
+            'balance_id' => $spartan->id,
+            'from_id' => 1,
+            'to_id' => $user->id,
+            'amount' => $total,
+            'description' => $description,
+            'status' => 1,
+            'type' => 'IN'
+        ]);
     }
 }

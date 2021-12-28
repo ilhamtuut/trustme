@@ -1,4 +1,4 @@
-@extends('layouts.backend',['active'=>'trustme_coin','page'=>'wallet'])
+@extends('layouts.backend',['active'=>'spartan_coin','page'=>'wallet'])
 
 @section('page-title')
 <span class="svg-icon svg-icon-white svg-icon-sm">
@@ -9,7 +9,7 @@
       </g>
   </svg>
 </span>
-Trustme Coin
+Spartan Coin
 @endsection
 
 @section('breadcrumb')
@@ -20,12 +20,12 @@ Trustme Coin
       <a href="" class="text-white text-hover-dark">Wallets</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="" class="text-white text-hover-dark">Trustme Coin</a>
+      <a href="" class="text-white text-hover-dark">Spartan Coin</a>
   </li>
 @endsection
 
 @section('content')
-<div class="col bg-warning px-6 py-3 rounded-sm mb-5">
+<div class="col bg-danger px-6 py-3 rounded-sm mb-5">
   <span class="svg-icon svg-icon-3x svg-icon-white d-block my-2">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -34,14 +34,12 @@ Trustme Coin
         </g>
     </svg>
   </span>
-  <span href="#" class="text-white font-weight-bold font-size-h6 mt-2">Trustme Coin <br><i class="fas fa-circle text-white"></i> {{number_format($saldo,8)}}</span>
+  <span href="#" class="text-white font-weight-bold font-size-h6 mt-2">Spartan Coin <br><i class="fas fa-circle text-white"></i> {{number_format($saldo,8)}}</span>
     @if(is_null($id))
-    <p class="pt-5">
-      <a href="{{route('transfer.wallet','trustme_coin')}}" class="btn btn-light-warning mr-3">
-      <i class="far fa-share-square"></i>Transfer</a>
-      <a href="{{route('deposit.index')}}" class="btn btn-light-success mr-3">
-      <i class="far fa-credit-card"></i>Deposit</a>
-    </p>
+        <p class="pt-5">
+            <a href="{{route('withdraw.spartan')}}" class="btn btn-light-danger mr-3">
+            <i class="far fa-credit-card"></i>Withdraw</a>
+        </p>
     @else
     <p class="pt-3 text-white">
         [{{strtoupper($balance->user->username)}}]

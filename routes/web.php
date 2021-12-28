@@ -101,9 +101,11 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
       Route::get('/usd_wallet', ['as' => 'my', 'uses' => 'BalanceController@balance_my']);
       Route::get('/register_wallet', ['as' => 'register', 'uses' => 'BalanceController@balance_register']);
       Route::get('/trustme_coin', ['as' => 'harvest', 'uses' => 'BalanceController@balance_harvest']);
+      Route::get('/spartan_coin', ['as' => 'spartan', 'uses' => 'BalanceController@balance_spartan']);
       Route::get('/usd_wallet/{id}', ['as' => 'my_member', 'uses' => 'BalanceController@balance_my_member'])->middleware(['permission:administrator']);
       Route::get('/trustme_coin/{id}', ['as' => 'harvest_member', 'uses' => 'BalanceController@balance_harvest_member'])->middleware(['permission:administrator']);
       Route::get('/register_wallet/{id}', ['as' => 'register_member', 'uses' => 'BalanceController@balance_register_member'])->middleware(['permission:administrator']);
+      Route::get('/spartan_coin/{id}', ['as' => 'spartan_member', 'uses' => 'BalanceController@balance_spartan_member'])->middleware(['permission:administrator']);
     });
 
     // convert
@@ -131,13 +133,13 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
       Route::get('/list/{type}', ['as' => 'list_withdraw', 'uses' => 'WithdrawController@list_withdraw'])->middleware(['permission:administrator']);
       Route::post('/accept/{id}', ['as' => 'accept', 'uses' => 'WithdrawController@accept'])->middleware(['permission:administrator']);
       Route::get('/reject/{id}', ['as' => 'reject', 'uses' => 'WithdrawController@reject'])->middleware(['permission:administrator']);
+      Route::get('/spartan', ['as' => 'spartan', 'uses' => 'WithdrawController@spartan']);
     });
 
     // setting
     Route::group(['prefix' => 'setting', 'as' => 'setting.'], function() {
       Route::get('/', ['as' => 'index', 'uses' => 'SettingController@index'])->middleware(['permission:administrator']);
       Route::post('/update', ['as' => 'update', 'uses' => 'SettingController@update'])->middleware(['permission:administrator']);
-
       Route::get('/roi', ['as' => 'package', 'uses' => 'SettingController@package'])->middleware(['permission:administrator']);
       Route::post('/update/package', ['as' => 'updatePackage', 'uses' => 'SettingController@updatePackage'])->middleware(['permission:administrator']);
     });
@@ -189,4 +191,12 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
         Route::get('/item', ['as' => 'item', 'uses' => 'TokokuController@item']);
         Route::post('/buy', ['as' => 'buy', 'uses' => 'TokokuController@buy']);
       });
+
+    // bounty
+    Route::group(['prefix' => 'bounty', 'as' => 'bounty.'], function() {
+        Route::get('/', ['as' => 'index', 'uses' => 'HoldController@index']);
+        Route::post('/holder', ['as' => 'holder', 'uses' => 'HoldController@holder']);
+        Route::get('/history', ['as' => 'history', 'uses' => 'HoldController@history']);
+        Route::get('/list', ['as' => 'list', 'uses' => 'HoldController@list'])->middleware(['permission:administrator']);
+    });
 });
