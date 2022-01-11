@@ -107,6 +107,26 @@ Edit User
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-form-label text-right col-md-3">Password</label>
+                                <div class="col-md-9">
+                                    <input type="password" name="password" class="form-control" placeholder="Password" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-form-label text-right col-md-3">Security password</label>
+                                <div class="col-md-9">
+                                    <input type="password" name="security_password" class="form-control" placeholder="Security password" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <hr>
                 <div class="row text-right">

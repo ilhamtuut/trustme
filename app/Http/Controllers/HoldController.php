@@ -38,10 +38,17 @@ class HoldController extends Controller
         $min = Setting::where('name','Minimal Hold')->first()->value;
         $timer = Setting::where('name','Hold Timer')->first()->value;
         $contract = '0x242a98b9b3a11fab499cb35f06f5c3f73a89194c';
-        $data = $user->holder()->orderBy('id','desc')->paginate(10);
+        $hold_timer = 0;
+        $data = $user->holder()->select('expired_at')->orderBy('expired_at','desc')->first();
+        if($data){
+            $now = strtotime(date('Y-m-d'));
+            $expired_at = strtotime($data->expired_at);
+            $difference = $expired_at - $now;
+            $hold_timer = $difference / 60 / 60 / 24;
+        }
         $my = number_format($user->balance()->where('description','Trustme Coin')->first()->balance,8);
         $spartan = number_format($user->balance()->where('description','Spartan Coin')->first()->balance,8);
-        return view('backend.holder.index', compact('my','spartan','min','timer','contract','rate','data'))->with('i', (request()->input('page', 1) - 1) * 10);
+        return view('backend.holder.index', compact('my','spartan','min','timer','contract','rate','hold_timer'));
     }
 
     public function holder(Request $request)

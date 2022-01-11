@@ -337,7 +337,8 @@ My Profile
                     <div class="form-group row">
                       <label class="col-form-label col-4 text-lg-right text-left">Verify Password</label>
                       <div class="col-8">
-                        <input name="confirm_password" type="password" class="form-control form-control-lg form-control-solid" placeholder="Verify password">
+                        <input name="confirm_password" type="password" class="form-control form-control-lg form-control-solid mb-3" placeholder="Verify password">
+                        <a href="{{route('user.forgot_security_password')}}">Forgot Security Password?</a>
                       </div>
                     </div>
                     <!--end::Group-->

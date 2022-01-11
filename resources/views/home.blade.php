@@ -173,6 +173,22 @@ Dashboard
         </div>
     </div>
 </div>
+@if($info && $info->content)
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-custom card-stretch gutter-b">
+            <div class="card-header border-0 pt-5">
+                <h3 class="card-title">
+                    <span class="card-label font-weight-bolder text-dark">Information</span>
+                </h3>
+            </div>
+            <div class="card-body pt-8">
+                {{$info->content}}
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <style type="text/css">
     .apexcharts-active{
         display: none;

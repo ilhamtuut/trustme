@@ -93,6 +93,7 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
       Route::get('/searchUser', ['as' => 'searchUser', 'uses' => 'UserController@searchUser']);
       Route::get('/block_unclock/{id}', ['as' => 'block_unclock', 'uses' => 'UserController@block_unclock'])->middleware(['permission:administrator']);
       Route::get('/list_sponsor', ['as' => 'list_sponsor', 'uses' => 'UserController@list_sponsor'])->middleware(['permission:administrator']);
+      Route::get('/forgot_security_password', ['as' => 'forgot_security_password', 'uses' => 'UserController@forgot_security_password']);
     });
 
     // balance
@@ -198,5 +199,11 @@ Route::group(['middleware' => ['auth','block-user','revalidate']], function() {
         Route::post('/holder', ['as' => 'holder', 'uses' => 'HoldController@holder']);
         Route::get('/history', ['as' => 'history', 'uses' => 'HoldController@history']);
         Route::get('/list', ['as' => 'list', 'uses' => 'HoldController@list'])->middleware(['permission:administrator']);
+    });
+
+    // bounty
+    Route::group(['prefix' => 'info', 'as' => 'info.'], function() {
+        Route::get('/', ['as' => 'index', 'uses' => 'InformationController@index']);
+        Route::post('/save', ['as' => 'save', 'uses' => 'InformationController@save']);
     });
 });

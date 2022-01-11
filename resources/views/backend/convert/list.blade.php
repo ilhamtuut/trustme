@@ -63,7 +63,7 @@ List Convert
                       <th class="text-right">Fee ($)</th>
                       <th class="text-right">Total ($)</th>
                       <th class="text-right">Price ($)</th>
-                      <th class="text-right">Recieve (DC)</th>
+                      <th class="text-right">Recieve (TMC)</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Information;
 use App\Price;
 use App\Setting;
 use App\Package;
@@ -56,7 +57,8 @@ class HomeController extends Controller
             $percent = round((($bonus_pasif + $bonus_aktif) / $max_profit) * 100,2);
         }
         $price = Price::get();
-        return view('home',compact('totalEarn','todayEarn','package','trustme','usd','register','bonus_aktif','bonus_pasif','max_profit','used_bonus','percent','price'));
+        $info = Information::first();
+        return view('home',compact('totalEarn','todayEarn','package','trustme','usd','register','bonus_aktif','bonus_pasif','max_profit','used_bonus','percent','price','info'));
     }
 
     public function pricing(Request $request)

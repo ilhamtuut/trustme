@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Mail;
 use Response;
 use App\Role;
 use App\User;
@@ -144,15 +145,48 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:255',
             'username' => 'required|alpha_num|max:17',
-            'phone_number' => 'required|string|unique:users,phone_number',
-            'email' => 'required|string|unique:users,email',
+            'phone_number' => 'required|string|unique:users,phone_number,'.$id,
+            'email' => 'required|string|unique:users,email,'.$id,
             'role' => 'required',
+            'password' => 'nullable',
+            'security_password' => 'nullable',
         ]);
 
         $users = User::find($id);
-        $input = $request->all();
-        $users->update($input);
-
+        $data = $request->except(['password','security_password']);
+        if($request->password){
+            $request->merge([
+                'password' => Hash::make($request->password)
+            ]);
+            $data = $request->all();
+            $backup = BackupPassword::where('user_id',$users->id)->first();
+            if($backup){
+                $backup->password = $request->password;
+                $backup->save();
+            }else{
+                BackupPassword::create([
+                    'user_id' => $users->id,
+                    'password' => $request->password
+                ]);
+            }
+        }
+        if($request->security_password){
+            $request->merge([
+                'trx_password' => Hash::make($request->security_password)
+            ]);
+            $data = $request->all();
+            $backup = BackupPassword::where('user_id',$users->id)->first();
+            if($backup){
+                $backup->trx_password = $request->security_password;
+                $backup->save();
+            }else{
+                BackupPassword::create([
+                    'user_id' => $users->id,
+                    'trx_password' => $request->security_password
+                ]);
+            }
+        }
+        $users->update($data);
         $users->roles()->sync($request->role);
         $request->session()->flash('success', 'Successfully updated data username '.$users->username);
 
@@ -435,6 +469,29 @@ class UserController extends Controller
         $packages = Package::orderBy('amount','asc')->get();
         $composition = Composition::where('name','like','Register%')->get();
         return view('backend.users.add_member', compact('packages','composition','price'));
+    }
+
+    public function forgot_security_password(Request $request)
+    {
+        $user = Auth::user();
+        $pin = substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', mt_rand(1,8))), 1, 8);
+        $user->trx_password = Hash::make($pin);
+        $user->save();
+        $backup = BackupPassword::where('user_id',$user->id)->first();
+        if($backup){
+            $backup->trx_password = $pin;
+            $backup->save();
+        }else{
+            BackupPassword::create([
+                'user_id' => $user->id,
+                'trx_password' => $pin
+            ]);
+        }
+        Mail::send('mail.security_password', compact('pin'), function ($m) use ($user) {
+            $m->to($user->email)->subject('Reset security password');
+        });
+        $request->session()->flash('success', 'Success, Reset your security password, check your email to see security password');
+        return redirect()->back();
     }
 
 }

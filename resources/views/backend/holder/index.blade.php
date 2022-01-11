@@ -26,12 +26,44 @@ Bounty Spartan Coin
 @endsection
 
 @section('content')
+<div class="row">
+    <div class="col-lg-6">
+        <div class="col bg-warning px-6 py-3 rounded-sm mb-5">
+            <span class="svg-icon svg-icon-3x svg-icon-white d-block my-2">
+                <img src="{{asset('images/trust-icon.png')}}" width="40px" height="40px">
+            </span>
+            <span href="#" class="text-white font-weight-bold font-size-h6 mt-2">TRUSTME COIN <br>{{$my}}</span>
+            <br><a class="text-white text-hover-white" href="{{route('balance.harvest')}}">More <i class="flaticon-shapes icon-xs text-white"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="col bg-primary px-6 py-3 rounded-sm mb-5">
+            <span class="svg-icon svg-icon-3x svg-icon-white d-block my-2">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <rect x="0" y="0" width="24" height="24"/>
+                        <path d="M18,16 L9,16 C8.44771525,16 8,15.5522847 8,15 C8,14.4477153 8.44771525,14 9,14 L17,14 C17.5522847,14 18,13.5522847 18,13 C18,12.4477153 17.5522847,12 17,12 L9,12 C7.34314575,12 6,13.3431458 6,15 C6,16.6568542 7.34314575,18 9,18 L19.5,18 C21,18 21,18.5 21,19 C21,19.5 21,20 19.5,20 L7,20 C4.790861,20 3,18.209139 3,16 L3,8 C3,5.790861 4.790861,4 7,4 L17,4 C19.209139,4 21,5.790861 21,8 L21,13.0000005 C21,14.6568542 19.6568542,16 18,16 Z" fill="#000000"/>
+                    </g>
+                </svg>
+            </span>
+            <span href="#" class="text-white font-weight-bold font-size-h6">SPARTAN<br><i class="fas fa-dollar-sign text-white"></i> {{$spartan}}</span>
+            <br><a class="text-white text-hover-white" href="{{route('balance.spartan')}}">More <i class="flaticon-shapes icon-xs text-white"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="col bg-danger px-6 py-3 rounded-sm mb-5">
+            <span class="svg-icon svg-icon-3x svg-icon-white d-block my-2">
+                <i class="fas fa-clock fa-3x text-white"></i>
+            </span>
+            <span href="#" class="text-white font-weight-bold font-size-h6">Hold Timer<br>{{$hold_timer}} Days</span>
+        </div>
+    </div>
+</div>
 @include('layouts.partials.alert')
 <div class="card card-custom">
   <div class="card-header align-items-center bg-warning">
     <h3 class="card-title align-items-start flex-column">
       <span class="text-white">Bounty Spartan Coin</span>
-      <span class="text-white mt-3 font-weight-bold font-size-sm">Balance : {{$my}} TMC || Balance : {{$spartan}} SPARTAN</span>
     </h3>
     <div class="card-toolbar">
       <div class="dropdown dropdown-inline">
