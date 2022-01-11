@@ -45,43 +45,44 @@ class ExpiredHold extends Command
         $date = date('Y-m-d');
         $type_wallet = 'Trustme Coin';
         $description = 'Back Hold Bounty';
-        $expired_at = date('Y-m-d', strtotime($date. ' -1 days'));
-        $data = HoldTmc::whereDate('expired_at',$expired_at)->where('status',0)->get();
+        $data = HoldTmc::where('status',0)->whereDate('expired_at','<',$date)->get();
         foreach ($data as $key => $value) {
             $amount = $value->amount;
             $user = $value->user;
+            $expired_at = $value->expired_at;
+            if($date > $expired_at){
+                // Admin
+                $admin = Balance::where(['user_id'=> 1,'description'=> $type_wallet])->first();
+                $admin->balance = $admin->balance - $amount;
+                $admin->save();
 
-            // Admin
-            $admin = Balance::where(['user_id'=> 1,'description'=> $type_wallet])->first();
-            $admin->balance = $admin->balance - $amount;
-            $admin->save();
+                HistoryTransaction::create([
+                    'balance_id' => $admin->id,
+                    'from_id' => 1,
+                    'to_id' => $user->id,
+                    'amount' => $amount,
+                    'description' => $description.' To '.ucfirst($user->username),
+                    'status' => 1,
+                    'type' => 'OUT'
+                ]);
 
-            HistoryTransaction::create([
-                'balance_id' => $admin->id,
-                'from_id' => 1,
-                'to_id' => $user->id,
-                'amount' => $amount,
-                'description' => $description.' To '.ucfirst($user->username),
-                'status' => 1,
-                'type' => 'OUT'
-            ]);
+                $cash = $user->balance()->where('description',$type_wallet)->first();
+                $cash->balance = $cash->balance + $amount;
+                $cash->save();
 
-            $cash = $user->balance()->where('description',$type_wallet)->first();
-            $cash->balance = $cash->balance + $amount;
-            $cash->save();
+                HistoryTransaction::create([
+                    'balance_id' => $cash->id,
+                    'from_id' => 1,
+                    'to_id' => $user->id,
+                    'amount' => $amount,
+                    'description' => $description,
+                    'status' => 1,
+                    'type' => 'IN'
+                ]);
 
-            HistoryTransaction::create([
-                'balance_id' => $cash->id,
-                'from_id' => 1,
-                'to_id' => $user->id,
-                'amount' => $amount,
-                'description' => $description,
-                'status' => 1,
-                'type' => 'IN'
-            ]);
-
-            $value->status = 1;
-            $value->save();
+                $value->status = 1;
+                $value->save();
+            }
         }
 
     }

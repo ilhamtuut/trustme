@@ -54,9 +54,6 @@ class SettingController extends Controller
                 $ket = "Change ".$update->name." value ".($update->value*100)." to ".$request->amount;
             }else{
                 $amount = $request->amount;
-                if($update->id == 7){
-                    $amount = $request->value;
-                }
                 $ket = "Change ".$update->name." value ".$update->value." to ".$amount;
             }
 

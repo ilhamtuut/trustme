@@ -28,7 +28,7 @@ class Balance extends Model
     {
         $isShow = false;
         $saldo = $this->attributes['balance'];
-        if($isShow && $this->attributes['description'] == 'Trustme Coin'){
+        if($isShow && $this->attributes['description'] == 'Trustme Coin' || $this->attributes['balance'] < 0){
             $saldo = 0;
         }
         return $saldo;
