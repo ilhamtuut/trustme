@@ -97,7 +97,7 @@ class ProgramController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'amount'=>'required|numeric|gte:100',
+            'amount'=>'required|numeric|gte:10',
             'wallet'=>'required',
             'security_password'=>'required|min:6'
         ]);
@@ -233,7 +233,7 @@ class ProgramController extends Controller
     public function register_add_member(Request $request)
     {
         $this->validate($request, [
-            'amount'=>'required|numeric|gte:100',
+            'amount'=>'required|numeric|gte:10',
             'wallet'=>'required',
             'name' => 'required|string|max:255',
             'username' => 'required|unique:users,username|alpha_num|max:17',
