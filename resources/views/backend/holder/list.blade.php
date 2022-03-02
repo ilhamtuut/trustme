@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-List Bounty Spartan Coin
+List Bounty CAPRABULLCOIN
 @endsection
 
 @section('breadcrumb')
@@ -20,7 +20,7 @@ List Bounty Spartan Coin
       <a href="" class="text-white text-hover-dark">Dashboard</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="#" class="text-white text-hover-dark">List Bounty Spartan Coin</a>
+      <a href="#" class="text-white text-hover-dark">List Bounty CAPRABULLCOIN</a>
   </li>
 @endsection
 
@@ -71,7 +71,7 @@ List Bounty Spartan Coin
                       <th class="text-center">Status</th>
                       <th class="text-right">Amount (TMC)</th>
                       <th class="text-right">Rate</th>
-                      <th class="text-right">Total (SPARTAN)</th>
+                      <th class="text-right">Total (CAPRABULLCOIN)</th>
                     </tr>
                 </thead>
                 <tbody>

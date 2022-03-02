@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-Withdraw Spartan Coin
+Withdraw CAPRABULLCOIN
 @endsection
 
 @section('breadcrumb')
@@ -33,7 +33,7 @@ Withdraw Spartan Coin
   <div class="card-header align-items-center bg-warning">
     <h3 class="card-title align-items-start flex-column">
       <span class="text-white">Withdraw</span>
-      <span class="text-white mt-3 font-weight-bold font-size-sm">Spartan Coin : {{$my}}</span>
+      <span class="text-white mt-3 font-weight-bold font-size-sm">CAPRABULLCOIN : {{$my}}</span>
     </h3>
     <div class="card-toolbar">
       <div class="dropdown dropdown-inline">
@@ -67,14 +67,14 @@ Withdraw Spartan Coin
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label">Spartan Coin address</label>
-              <input id="address" name="address" value="{{$address}}" @if($address) readonly @endif class="form-control" placeholder="Spartan Coin address" type="text">
+              <label class="control-label">CAPRABULLCOIN address</label>
+              <input id="address" name="address" value="{{$address}}" @if($address) readonly @endif class="form-control" placeholder="CAPRABULLCOIN address" type="text">
               <p id="error-address" class="text-danger"></p>
             </div>
 
             <div class="form-group">
-              <label class="control-label">Amount (Spartan Coin)</label>
-              <input id="amount" name="amount" class="form-control" placeholder="Amount (Spartan Coin)" min="1" type="number">
+              <label class="control-label">Amount (CAPRABULLCOIN)</label>
+              <input id="amount" name="amount" class="form-control" placeholder="Amount (CAPRABULLCOIN)" min="1" type="number">
               <p id="error-amount" class="text-danger"></p>
             </div>
 
@@ -86,8 +86,8 @@ Withdraw Spartan Coin
             @endif
 
             <div class="form-group">
-              <label class="control-label">Receive (Spartan Coin)</label>
-              <input id="receive" class="form-control" placeholder="Receive (Spartan Coin)" type="text" readonly>
+              <label class="control-label">Receive (CAPRABULLCOIN)</label>
+              <input id="receive" class="form-control" placeholder="Receive (CAPRABULLCOIN)" type="text" readonly>
             </div>
 
             <div class="form-group">
@@ -124,7 +124,7 @@ Withdraw Spartan Coin
         $('#fee').val(addCommas(parseFloat(amountfee).toFixed(8)));
         $('#receive').val(addCommas(parseFloat(receive).toFixed(8)));
       }else{
-        $('#error-amount').html('Minimal Withdrawal : {{$min}} SPARTAN');
+        $('#error-amount').html('Minimal Withdrawal : {{$min}} CAPRABULLCOIN');
         $('#receive').val('');
       }
     });

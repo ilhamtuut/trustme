@@ -10,7 +10,7 @@
         </g>
     </svg>
 </span>
-Bounty Spartan Coin
+Bounty CAPRABULLCOIN
 @endsection
 
 @section('breadcrumb')
@@ -21,7 +21,7 @@ Bounty Spartan Coin
       <a href="" class="text-white text-hover-dark">Bounty</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="#" class="text-white text-hover-dark">Spartan Coin</a>
+      <a href="#" class="text-white text-hover-dark">CAPRABULLCOIN</a>
   </li>
 @endsection
 
@@ -46,7 +46,7 @@ Bounty Spartan Coin
                     </g>
                 </svg>
             </span>
-            <span href="#" class="text-white font-weight-bold font-size-h6">SPARTAN<br><i class="fas fa-dollar-sign text-white"></i> {{$spartan}}</span>
+            <span href="#" class="text-white font-weight-bold font-size-h6">CAPRABULLCOIN<br><i class="fas fa-dollar-sign text-white"></i> {{$spartan}}</span>
             <br><a class="text-white text-hover-white" href="{{route('balance.spartan')}}">More <i class="flaticon-shapes icon-xs text-white"></i></a>
         </div>
     </div>
@@ -63,7 +63,7 @@ Bounty Spartan Coin
 <div class="card card-custom">
   <div class="card-header align-items-center bg-warning">
     <h3 class="card-title align-items-start flex-column">
-      <span class="text-white">Bounty Spartan Coin</span>
+      <span class="text-white">Bounty CAPRABULLCOIN</span>
     </h3>
     <div class="card-toolbar">
       <div class="dropdown dropdown-inline">
@@ -83,9 +83,9 @@ Bounty Spartan Coin
                 </div>
                 <div class="alert-text">
                     <li>Hold Minimal {{$min}} TMC</li>
-                    <li>1 TMC Get {{$rate}} SPARTAN</li>
+                    <li>1 TMC Get {{$rate}} CBC</li>
                     <li>Hold Timer : {{$timer}} Days</li>
-                    <li>Smart Contract Spartan Coin <span class="text-warning">{{$contract}}</span></li>
+                    <li>Smart Contract CAPRABULLCOIN <span class="text-warning">{{$contract}}</span></li>
                 </div>
               </div>
             </div>
@@ -97,8 +97,8 @@ Bounty Spartan Coin
             </div>
 
             <div class="form-group">
-              <label class="control-label">Total (SPARTAN)</label>
-              <input id="total" name="total" class="form-control" placeholder="Total (SPARTAN)" type="text" readonly>
+              <label class="control-label">Total (CAPRABULLCOIN)</label>
+              <input id="total" name="total" class="form-control" placeholder="Total (CAPRABULLCOIN)" type="text" readonly>
               <p id="error-total" class="text-danger"></p>
             </div>
 

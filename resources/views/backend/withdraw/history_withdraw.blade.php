@@ -40,7 +40,7 @@ History Withdraw
                             <select name="type" class="form-control select2" style="width: 100%;">
                                 <option value="">Choose Type</option>
                                 <option @if(request()->type == 'trustme') selected @endif value="trustme">Trustme Coin</option>
-                                <option @if(request()->type == 'spartan') selected @endif value="spartan">Spartan Coin</option>
+                                <option @if(request()->type == 'spartan') selected @endif value="spartan">CAPRABULLCOIN</option>
                             </select>
                         </div>
                         <div class="col-md-4 my-2 my-md-0">

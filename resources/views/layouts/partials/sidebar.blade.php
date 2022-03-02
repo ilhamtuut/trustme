@@ -93,7 +93,7 @@
                                           </g>
                                       </svg>
                                   </span>
-                                  <span class="menu-text">Spartan Coin</span>
+                                  <span class="menu-text">CAPRABULLCOIN</span>
                               </a>
                           </li>
                       </ul>
@@ -194,7 +194,7 @@
                             </g>
                         </svg>
                     </span>
-                    <span class="menu-text">Bounty Spartan Coin</span>
+                    <span class="menu-text">Bounty CAPRABULLCOIN</span>
                 </a>
               </li>
               <li class="menu-item menu-item-submenu {{ isset($page) && $page == 'withdraw' ? 'menu-item-open menu-item-here' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
@@ -229,7 +229,7 @@
                                 <i class="menu-bullet menu-bullet-dot">
                                     <span></span>
                                 </i>
-                                <span class="menu-text">Spartan Coin</span>
+                                <span class="menu-text">CAPRABULLCOIN</span>
                             </a>
                         </li>
                     </ul>
@@ -364,7 +364,7 @@
                             </g>
                         </svg>
                     </span>
-                    <span class="menu-text">Bounty Spartan Coin</span>
+                    <span class="menu-text">Bounty CAPRABULLCOIN</span>
                 </a>
               </li>
               <li class="menu-item menu-item-submenu {{ isset($page) && $page == 'bonus_active' ? 'menu-item-open menu-item-here' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
@@ -523,7 +523,7 @@
                                 <i class="menu-bullet menu-bullet-dot">
                                     <span></span>
                                 </i>
-                                <span class="menu-text">Spartan Coin</span>
+                                <span class="menu-text">CAPRABULLCOIN</span>
                             </a>
                         </li>
                       </ul>

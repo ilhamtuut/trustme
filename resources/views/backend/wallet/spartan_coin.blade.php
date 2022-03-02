@@ -9,7 +9,7 @@
       </g>
   </svg>
 </span>
-Spartan Coin
+CAPRABULLCOIN
 @endsection
 
 @section('breadcrumb')
@@ -20,7 +20,7 @@ Spartan Coin
       <a href="" class="text-white text-hover-dark">Wallets</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="" class="text-white text-hover-dark">Spartan Coin</a>
+      <a href="" class="text-white text-hover-dark">CAPRABULLCOIN</a>
   </li>
 @endsection
 
@@ -34,7 +34,7 @@ Spartan Coin
         </g>
     </svg>
   </span>
-  <span href="#" class="text-white font-weight-bold font-size-h6 mt-2">Spartan Coin <br><i class="fas fa-circle text-white"></i> {{number_format($saldo,8)}}</span>
+  <span href="#" class="text-white font-weight-bold font-size-h6 mt-2">CAPRABULLCOIN <br><i class="fas fa-circle text-white"></i> {{number_format($saldo,8)}}</span>
     @if(is_null($id))
         <p class="pt-5">
             <a href="{{route('withdraw.spartan')}}" class="btn btn-light-danger mr-3">

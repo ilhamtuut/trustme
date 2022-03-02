@@ -37,7 +37,7 @@ class HoldController extends Controller
         $rate = Setting::where('name','1 TMC')->first()->value;
         $min = Setting::where('name','Minimal Hold')->first()->value;
         $timer = Setting::where('name','Hold Timer')->first()->value;
-        $contract = '0x242a98b9b3a11fab499cb35f06f5c3f73a89194c';
+        $contract = '0xbB46025A7B450312ce17b25d85A4A12eCb21d0E2';
         $hold_timer = 0;
         $data = $user->holder()->select('expired_at')->orderBy('expired_at','desc')->first();
         if($data){
@@ -68,7 +68,7 @@ class HoldController extends Controller
         $type_wallet = 'Trustme Coin';
         $rate = Setting::where('name','1 TMC')->first()->value;
         $timer = Setting::where('name','Hold Timer')->first()->value;
-        $description = 'Holder Bounty Spartan Coin';
+        $description = 'Holder Bounty CAPRABULLCOIN';
 
         $amount = $request->amount;
         $total = $amount * $rate;
