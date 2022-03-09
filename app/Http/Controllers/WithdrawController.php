@@ -135,7 +135,7 @@ class WithdrawController extends Controller
         if($hasPassword){
             $type_wallet = ucfirst($type).' Coin';
             $fee_wd = Setting::where('name',$name_wd)->first()->value;
-            $description = 'Withdrawal '.ucfirst($type).' Coin';
+            $description = 'Withdrawal '.ucfirst($currencyNama);
             // $coin = Auth::user()->wallet()->where('status',$status)->first();
             // if(is_null($coin)){
             //     $coin = Wallet::create([
