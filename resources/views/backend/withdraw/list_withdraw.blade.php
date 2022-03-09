@@ -12,7 +12,7 @@
       </g>
   </svg>
 </span>
-List Withdraw {{strtoupper($type)}}
+List Withdraw {{strtoupper($type == 'spartan' ? 'CAPRABULLCOIN' : $type)}}
 @endsection
 
 @section('breadcrumb')
@@ -20,7 +20,7 @@ List Withdraw {{strtoupper($type)}}
       <a href="" class="text-white text-hover-dark">Dashboard</a>
   </li>
   <li class="breadcrumb-item">
-      <a href="#" class="text-white text-hover-dark">List Withdraw {{strtoupper($type)}}</a>
+      <a href="#" class="text-white text-hover-dark">List Withdraw {{strtoupper($type == 'spartan' ? 'CAPRABULLCOIN' : $type)}}</a>
   </li>
 @endsection
 

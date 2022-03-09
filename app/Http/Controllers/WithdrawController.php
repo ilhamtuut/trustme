@@ -106,13 +106,21 @@ class WithdrawController extends Controller
     {
         $status = 1;
         $currency = 'TC';
+        $currencyNama = 'Trustme Coin';
         $name_wd = 'Fee Withdrawal';
         $price = Price::where('status',0)->first()->price;
         $required_amount = 'required|numeric|greater_than';
+        $setData = '2022-03-02';
+        $date = date('Y-m-d', strtotime($wd->created_at));
         if($type == 'spartan'){
             $price = 0;
             $status = 2;
             $currency = 'SPARTAN';
+            $currencyNama = 'Spartan Coin';
+            if($date >= $setData){
+                $currency = 'CBC';
+                $currencyNama = 'CAPRABULLCOIN';
+            }
             $name_wd = 'Fee Withdrawal Spartan';
             $required_amount = 'required|numeric|min_spartan';
         }
@@ -128,20 +136,20 @@ class WithdrawController extends Controller
             $type_wallet = ucfirst($type).' Coin';
             $fee_wd = Setting::where('name',$name_wd)->first()->value;
             $description = 'Withdrawal '.ucfirst($type).' Coin';
-            $coin = Auth::user()->wallet()->where('status',$status)->first();
-            if(is_null($coin)){
-                $coin = Wallet::create([
-                    'user_id' => Auth::id(),
-                    'name' => ucfirst($type).' Coin',
-                    'currency' => $currency,
-                    'address' => $request->address,
-                    'key' => $request->address,
-                    'status' => $status
-                ]);
-            }
+            // $coin = Auth::user()->wallet()->where('status',$status)->first();
+            // if(is_null($coin)){
+            //     $coin = Wallet::create([
+            //         'user_id' => Auth::id(),
+            //         'name' => ucfirst($type).' Coin',
+            //         'currency' => $currency,
+            //         'address' => $request->address,
+            //         'key' => $request->address,
+            //         'status' => $status
+            //     ]);
+            // }
             $data_json = array(
-                'name' => $coin->name,
-                'address' => $coin->address
+                'name' => $currencyNama,
+                'address' => $request->address
             );
             $amount = $request->amount;
             $total = $amount * $price;

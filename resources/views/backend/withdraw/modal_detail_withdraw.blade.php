@@ -16,15 +16,29 @@
 		                    <div class="clearfix"></div>
 		                </div>
 		              	<div class="panel-body">
+                            @php
+                                $currency = 'TMC';
+                                $currencyName = 'Trustme Coin';
+                                $setData = '2022-03-02';
+                                $date = date('Y-m-d', strtotime($wd->created_at));
+                                if($type == 'spartan'){
+                                    $currencyName = 'Spartan Coin';
+                                    $currency = 'SPARTAN';
+                                    if($date >= $setData){
+                                        $currencyName = 'CAPRABULLCOIN';
+                                        $currency = 'CBC';
+                                    }
+                                }
+                            @endphp
 				      		<p class="mb-1">Name : {{ucfirst($wd->user->name)}}</p>
 				      		<p class="mb-1">Username : {{ucfirst($wd->user->username)}}</p>
-				      		<p class="mb-1">Amount : {{number_format($wd->amount,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
+				      		<p class="mb-1">Amount : {{number_format($wd->amount,8)}} {{$currency}}</p>
                             @if($type == 'trustme')
                                 <p class="mb-1">Exchange Rate : {{number_format($wd->price,2)}} USD</p>
                                 <p class="mb-1">Total : {{number_format($wd->total,2)}} USD</p>
                             @endif
-				      		<p class="mb-1">Fee : {{number_format($wd->fee,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
-				      		<p class="mb-1">Receive : {{number_format($wd->receive,8)}} {{($type == 'spartan')?'SPARTAN':'TMC'}}</p>
+				      		<p class="mb-1">Fee : {{number_format($wd->fee,8)}} {{$currency}}</p>
+				      		<p class="mb-1">Receive : {{number_format($wd->receive,8)}} {{$currency}}</p>
 				      		<p class="mb-1">Status :
 				      			@if($wd->status == 1)
 			                    	<span class="label label-md label-light-success label-inline">Success</span>
@@ -43,7 +57,7 @@
 	      			<div class="panel panel-primary">
 	      				<div class="panel-heading">
 		                    <div class="pull-left">
-		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : ucfirst($type).' Coin Address' }}</h6>
+		                        <h6 class="panel-title txt-light">{{($wd->type == 'Bank') ? 'Account Bank' : ucfirst($currencyName).' Address' }}</h6>
 		                    </div>
 		                    <div class="clearfix"></div>
 		                </div>

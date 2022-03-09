@@ -68,7 +68,7 @@ Withdraw Trustme Coin
             </div>
             <div class="form-group">
               <label class="control-label">Trustme Coin address</label>
-              <input id="address" name="address" value="{{$address}}" @if($address) readonly @endif class="form-control" placeholder="Trustme Coin address" type="text">
+              <input id="address" name="address" class="form-control" placeholder="Trustme Coin address" type="text">
               <p id="error-address" class="text-danger"></p>
             </div>
 
