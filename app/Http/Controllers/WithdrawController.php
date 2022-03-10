@@ -110,17 +110,13 @@ class WithdrawController extends Controller
         $name_wd = 'Fee Withdrawal';
         $price = Price::where('status',0)->first()->price;
         $required_amount = 'required|numeric|greater_than';
-        $setData = '2022-03-02';
-        $date = date('Y-m-d', strtotime($wd->created_at));
         if($type == 'spartan'){
             $price = 0;
             $status = 2;
-            $currency = 'SPARTAN';
-            $currencyNama = 'Spartan Coin';
-            if($date >= $setData){
-                $currency = 'CBC';
-                $currencyNama = 'CAPRABULLCOIN';
-            }
+            // $currency = 'SPARTAN';
+            // $currencyNama = 'Spartan Coin';
+            $currency = 'CBC';
+            $currencyNama = 'CAPRABULLCOIN';
             $name_wd = 'Fee Withdrawal Spartan';
             $required_amount = 'required|numeric|min_spartan';
         }
@@ -149,6 +145,7 @@ class WithdrawController extends Controller
             // }
             $data_json = array(
                 'name' => $currencyNama,
+                'currency' => $currency,
                 'address' => $request->address
             );
             $amount = $request->amount;
